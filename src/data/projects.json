@@ -1,0 +1,29 @@
+{
+    "projects": [
+        {
+            "title": "Glyco",
+            "titleColored": "Safe",
+            "titleColor": "u-accent-orange",
+            "image": "/glycosafe cover.jpg",
+            "description": "GlycoSafe is an AI-powered app that estimates the glycemic load of meals from photos, offering tools for meal tracking, medication reminders, and personalized diabetes management insights.",
+            "technologies": ["Flutter", "Dart", "Figma","Python", "Django", "PostgreSQL", "Pytorch"],
+            "links": {
+                "Youtube": "https://www.youtube.com/watch?v=LS817Ood-0A&t=10s",
+                "Website": "https://glycosafe.jhubafrica.com"
+            },
+            "descriptionSide": "right"
+        },
+        {
+            "title": "Byte",
+            "titleColored": "Flow",
+            "titleColor": "u-accent-blue",
+            "image": "/byteflow cover.jpg",
+            "description": "I developed the ByteFlows website, creating a seamless and responsive platform that highlights their tech solutions with a sleek, user-friendly design.",
+            "technologies": ["React", "Tailwind", "Javascript", "Django"],
+            "links": {
+                "Website": "https://byteflow.co.ke"
+            },
+            "descriptionSide": "left"
+        }
+    ]
+}

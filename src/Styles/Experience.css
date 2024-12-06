@@ -1,0 +1,15 @@
+.experience{
+    background: #111827;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3em;
+}
+
+.experienceContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2em;
+}

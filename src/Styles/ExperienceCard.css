@@ -1,0 +1,48 @@
+.experienceCard{
+    display: flex;
+    border-radius: 15px;
+    padding: 1em;
+    color: rgb(157, 157, 157);
+    min-width: 400px;
+    max-width: 70%;
+    background: #171e2b;
+    justify-content: space-between;
+}
+
+.company{
+    width: 100px;
+    height: 100px;
+    padding: 1em;
+}
+
+.description h3{
+    font-size: 1.2em;
+    font-weight: 600;
+    color: #fff;
+    padding-bottom: .5em;
+}
+
+.description{
+    padding: 1em;
+    width: 50%;
+}
+
+.description ul{
+    font-size: .9em;
+    list-style-type: bullet;
+}
+
+.duration{
+    padding: 1em;
+    width: 20%;
+}
+
+.duration p{
+    font-size: .9em;
+    font-weight: 600;
+}
+
+.bullet{
+    font-size: 1.2em;
+    color: #fff;
+}
