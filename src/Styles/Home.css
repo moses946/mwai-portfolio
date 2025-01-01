@@ -1,12 +1,7 @@
 .HomePage{
     width: 100vw;
-    min-height: 90vh;
-    max-height: 100vh;
 }
 
-.homeText{
-    width: 50%;
-}
 
 .title h1{
     font-size: 3em;
@@ -16,11 +11,7 @@
 }
 
 .homeImage{
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* justify-content: center; */
+    display: none;
 }
 
 .homeImage img{
@@ -35,4 +26,17 @@
 .social-links{
     cursor: pointer;
     font-size: 1.2em;
+}
+
+@media only screen and (min-width: 768px){
+    .homeText{
+        width: 50%;
+    }
+    .homeImage{
+        display: flex;
+        width: 50%;
+        flex-direction: column;
+        align-items: center;
+    /* justify-content: center; */
+    }
 }

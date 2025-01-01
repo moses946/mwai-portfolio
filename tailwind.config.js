@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        youtube: '#FF0000', // Adding YouTube red
+      },
+    },
   },
   plugins: [],
 }

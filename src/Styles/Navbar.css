@@ -1,4 +1,55 @@
 .link{
     color: white;
     cursor: pointer;
+    border-bottom: 0.2px solid #181e2deb;
+}
+
+.bignav{
+    display: none;
+}
+
+.hidden-btn{
+    display: none;
+}
+
+.list-burger ,.close-burger{ 
+    font-size: 1.7em;
+    padding: .5em;
+    cursor: pointer;
+}
+
+.side-menu{
+    /* margin-top: 1em; */
+    position: absolute;
+    /* display: none; */
+    padding: 1em;
+    background: #111827;
+    top: 80px;
+    width: 100vw;
+    transition: all .35s ease-in-out;
+}
+
+.side-menu.open{
+    right: 0;
+}
+
+.side-menu.close{
+    right: -100vw;
+
+}
+
+
+
+@media only screen and (min-width: 768px) {
+    .smallnav{
+        display: none;
+    }
+
+    .bignav{
+        display: flex;
+    }
+    .link{
+        border: none;
+    }
+    
 }

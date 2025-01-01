@@ -22,7 +22,7 @@ const About = () => {
               scratch, turning abstract problems into tangible solutions, became my
               true passion.
             </p>
-            <p>
+            <p className="specialization">
               I specialize in JavaScript, Python, Flutter, Node.js, and React—tools
               that let me transform ideas into dynamic, user-friendly applications.
               Whether I'm developing responsive web apps or sleek mobile

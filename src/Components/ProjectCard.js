@@ -12,9 +12,9 @@ const TechCard = ({title}) => {
 
 const LinkBtn = ({link, title}) => {
     return (
-        <div className="link-btn bg-slate-600 hover:bg-purple-700">
+        <div className="link-btn flex f">
             <a href={link} target="_blank" rel="noreferrer">
-            {title === "Youtube" ? <i class="bi bi-play-btn proj-link"></i> : <i class="bi bi-box-arrow-up-right proj-link"></i>}
+            {title === "Youtube" ? <><p>Demo</p><i className="bi bi-youtube iconText bg-clip-text hover:text-youtube hover:bg-white"></i></>: <><p>Link</p><i class="bi bi-link-45deg iconText hover:text-purple-500"></i></>}
             </a>
         </div>
     )

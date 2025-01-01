@@ -1,7 +1,7 @@
 .about{
     background: #111827;
     width: 100vw;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     padding: 2em 1em;
     display: flex;
     flex-direction: column;
@@ -9,30 +9,48 @@
 }
 .aboutContent{
     display: flex;
+    flex-direction: column;
     padding-top: 2em;
     justify-content: center;
     align-items: center;
 }
 .aboutImage{
-    width: 50%;
+    /* width: 50%; */
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+   
 }
 
 .aboutImage img{
-    height: 400px;
+    height: 350px;
+    padding: 8px;
+    background: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .aboutText{
     /* margin-top: 1em; */
-    width: 50%;
+    /* width: 50%; */
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 2em;
-    padding: 1em 2em 1em 0;
+    padding: 2rem;
+
 }
 .aboutText h1{
     font-weight: bold;
     font-size: 1.5em;
+}
+
+.specialization{
+    display: none;
+}
+
+@media  screen and (min-width: 768px) {
+    .aboutContent{flex-direction: row;}
+    .aboutImage{width: 50%;}
 }
