@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.css": "/mwai-portfolio/static/css/main.b764306b.css",
+    "main.js": "/mwai-portfolio/static/js/main.28a65f95.js",
+    "static/js/453.48df6e43.chunk.js": "/mwai-portfolio/static/js/453.48df6e43.chunk.js",
+    "static/media/Byteflow.png": "/mwai-portfolio/static/media/Byteflow.99e8b965451b13c81360.png",
+    "static/media/mwai home.jpg": "/mwai-portfolio/static/media/mwai home.6d26c7c0a5e6bf88b8fc.jpg",
+    "static/media/mwai about.jpg": "/mwai-portfolio/static/media/mwai about.10608f4d65796401a082.jpg",
+    "static/media/JHUB Africa.png": "/mwai-portfolio/static/media/JHUB Africa.784fa003f0d3ed1f9871.png",
+    "index.html": "/mwai-portfolio/index.html",
+    "main.b764306b.css.map": "/mwai-portfolio/static/css/main.b764306b.css.map",
+    "main.28a65f95.js.map": "/mwai-portfolio/static/js/main.28a65f95.js.map",
+    "453.48df6e43.chunk.js.map": "/mwai-portfolio/static/js/453.48df6e43.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.b764306b.css",
+    "static/js/main.28a65f95.js"
+  ]
+}
