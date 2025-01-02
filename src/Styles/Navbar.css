@@ -8,10 +8,6 @@
     display: none;
 }
 
-.hidden-btn{
-    display: none;
-}
-
 .list-burger ,.close-burger{ 
     font-size: 1.7em;
     padding: .5em;
@@ -20,21 +16,25 @@
 
 .side-menu{
     /* margin-top: 1em; */
-    position: absolute;
+    position: fixed;
     /* display: none; */
     padding: 1em;
-    background: #111827;
+    background: #030712;
     top: 80px;
     width: 100vw;
-    transition: all .35s ease-in-out;
+    transition: all .45s ease-out;
 }
 
 .side-menu.open{
     right: 0;
+    /* display: block; */
+    opacity: 1;
 }
 
 .side-menu.close{
     right: -100vw;
+    /* display: none; */
+    opacity: 0;
 
 }
 
