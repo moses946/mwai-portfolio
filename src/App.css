@@ -1,5 +1,6 @@
 .app{
     background: #030712;
+    overflow-x: hidden;
 }
 
 .section-desc{
