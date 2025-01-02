@@ -2,8 +2,23 @@ import React from "react";
 import "../Styles/Home.css"
 // import PhotoCard from "../Components/PhotoCard";
 import yourPhoto from "../assets/mwai home.jpg";
+import Typed from 'typed.js';
+import {useRef, useEffect} from "react";
 
 const Home = () => {
+  const el = useRef(null);
+  useEffect(() => {
+    const typed = new Typed(el.current, {
+      strings: ["Hi, I'm Moses Mwai 👋", "Salut, je suis Moses Mwai 👋","你好，我是Moses Mwai 👋","Hallo, ich bin Moses Mwai 👋", "Hi, I'm Moses Mwai 👋"],
+      typeSpeed: 50,
+    });
+
+    return () => {
+      // Destroy Typed instance during cleanup to stop animation
+      typed.destroy();
+    };
+  }, []);
+
   return (
     <div className="HomePage p-4 flex gap-4 justify-center  flex-row-reverse">
       <div className="homeImage">
@@ -12,7 +27,7 @@ const Home = () => {
       </div>
       <div className="homeText flex flex-col px-8 ">
         <div className="title">
-          <h1>Hi, I'm Moses Mwai👋</h1>
+          <h1><span ref={el} /></h1>
         </div>
         <div className="home-desc py-4">
           <p>
