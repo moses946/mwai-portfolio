@@ -18,7 +18,7 @@
             "titleColored": "Flow",
             "titleColor": "u-accent-blue",
             "image": "/byteflow cover.jpg",
-            "description": "I developed the ByteFlows website, creating a seamless and responsive platform that highlights their tech solutions with a sleek, user-friendly design.",
+            "description": "I developed  ByteFlow's website, creating a seamless and responsive platform that highlights their tech solutions with a sleek, user-friendly design.",
             "technologies": ["React", "Tailwind", "Javascript", "Django"],
             "links": {
                 "Website": "https://byteflow.co.ke"

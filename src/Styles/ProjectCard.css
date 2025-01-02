@@ -2,7 +2,9 @@
     display: flex;
     /* padding: 1.5em 1em; */
     color: #fff;
-    max-width: 100%;
+    min-width: 350px;
+
+    max-width: 80%;
     justify-content: space-between;
     border-radius: 20px;
     background: #1F2937;
@@ -100,7 +102,7 @@
 
 @media  screen and (min-width: 768px) {
     .project-card{
-        max-width: 70%;
+        max-width: 80%;
         flex-direction: row;
     }
     .left{

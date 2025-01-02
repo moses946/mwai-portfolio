@@ -7,6 +7,9 @@ const ExperienceCard = ({company, position, duration, descriptionList, companyLo
         <div className="experienceCard">
             <div className="company">
                 <img src={companyLogo} alt={company} />
+                <div className="duration small">
+                <p>{duration}</p>
+            </div>
             </div>
             <div className="description">
                 <h3>{position}</h3>
@@ -15,9 +18,6 @@ const ExperienceCard = ({company, position, duration, descriptionList, companyLo
                     <li key={index}><span className="bullet">&#8226;</span> {description}</li>
                 ))}
                 </ul>
-            </div>
-            <div className="duration">
-                <p>{duration}</p>
             </div>
 
         </div>

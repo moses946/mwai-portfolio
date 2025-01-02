@@ -3,16 +3,25 @@
     border-radius: 15px;
     padding: 1em;
     color: rgb(157, 157, 157);
-    min-width: 400px;
-    max-width: 70%;
+    min-width: 350px;
+    max-width: 80%;
     background: #171e2b;
     justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
 }
 
 .company{
-    width: 100px;
-    height: 100px;
+    width: 80%;
+    /* height: 100px; */
     padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.company img{
+    width: 40%;
 }
 
 .description h3{
@@ -23,8 +32,12 @@
 }
 
 .description{
-    padding: 1em;
-    width: 50%;
+    padding: 0em 1em 1em 1em;
+    /* width: 50%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .description ul{
@@ -34,15 +47,23 @@
 
 .duration{
     padding: 1em;
-    width: 20%;
+    /* width: 20%; */
 }
 
 .duration p{
-    font-size: .9em;
+    font-size: .8em;
     font-weight: 600;
 }
 
 .bullet{
     font-size: 1.2em;
     color: #fff;
+}
+
+@media screen and (min-width: 900px){
+    .experienceCard{
+        flex-direction: row;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
 }

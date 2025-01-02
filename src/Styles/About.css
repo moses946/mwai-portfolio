@@ -46,11 +46,8 @@
     font-size: 1.5em;
 }
 
-.specialization{
-    display: none;
-}
 
-@media  screen and (min-width: 768px) {
+@media  screen and (min-width: 900px) {
     .aboutContent{flex-direction: row;}
     .aboutImage{width: 50%;}
 }
