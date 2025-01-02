@@ -10,25 +10,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
-      - name: Checkout code
+      # Step 1: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Node.js environment
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
 
-      # Install dependencies and build the project
-      - name: Install dependencies
+      # Step 3: Install dependencies and build the app
+      - name: Install and build
         run: |
-          npm install
+          npm ci
           npm run build
 
-      # Deploy to GitHub Pages
+      # Step 4: Deploy the build folder to the gh-pages branch
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git fetch
+          git switch --orphan gh-pages
+          git rm -rf .
+          cp -r build/* .
+          touch .nojekyll
+          git add .
+          git commit -m "Deploy to GitHub Pages"
+          git push --force origin gh-pages
