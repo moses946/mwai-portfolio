@@ -1,0 +1,233 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { INKS, inkStyle, u } from '../../lib/site';
+import { preview } from '../../lib/previews';
+
+interface Props { work: CollectionEntry<'work'>[] }
+const { work } = Astro.props;
+
+// Scatter positions for wide screens: x is a fraction of the free width, y in px, tilt in degrees.
+const LAYOUT: [number, number, number][] = [
+  [0.01, 30, -4], [0.34, 8, 3], [0.67, 46, -2], [1, 16, 4],
+  [0.05, 400, 3], [0.37, 424, -5], [0.69, 388, 2], [0.98, 418, -3],
+];
+---
+<section class="wrap" id="work" aria-labelledby="work-title" data-chaos>
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Specimen bench · {work.length} experiments</p>
+      <h2 id="work-title">Pick one up</h2>
+    </div>
+    <div class="bench-tools" role="group" aria-label="Arrange the bench">
+      <button class="pill" type="button" data-bench="scatter">Scatter</button>
+      <button class="pill" type="button" data-bench="tidy">Tidy</button>
+    </div>
+  </div>
+  <div class="ruler" aria-hidden="true"><svg data-ruler></svg></div>
+  <div class="bench" data-bench-surface>
+    {work.map((w, i) => {
+      const [x, y, tilt] = LAYOUT[i % LAYOUT.length];
+      return (
+        <a
+          class="specimen tape"
+          href={u(`/work/${w.id}/`)}
+          data-id={w.data.code}
+          style={`${inkStyle(w.data.ink)} --x:${x}; --y:${y}px; --tilt:${tilt}deg;`}
+          transition:name={`exp-${w.data.code}`}
+          aria-label={`EXP-${w.data.code} ${w.data.title}: ${w.data.metric} ${w.data.metricLabel}`}
+        >
+          <div class="sp-top mono"><span>EXP-{w.data.code}</span><span>{INKS[w.data.ink].name}</span></div>
+          <h3 class="sp-name">{w.data.title}</h3>
+          <div class="sp-metric"><b>{w.data.metric}</b><span>{w.data.metricLabel}</span></div>
+          <div class="sp-preview" set:html={preview(w.data.preview)} />
+          <div class="sp-foot mono"><span>{w.data.medium}</span><span>Open →</span></div>
+        </a>
+      );
+    })}
+    <span class="bench-hint" aria-hidden="true">drag them around · click to open</span>
+  </div>
+
+  <div class="index">
+    <div class="index-row index-head mono" aria-hidden="true"><span>ID</span><span>Specimen</span><span class="c-proves">What it proves</span><span class="c-medium">Medium</span><span>Year</span></div>
+    <ol class="index-rows" aria-label="All experiments">
+      {work.map((w) => (
+        <li>
+          <a class="index-row" href={u(`/work/${w.id}/`)} style={`--sw: var(--r-${w.data.ink})`}>
+            <span class="mono"><i class="sw" aria-hidden="true"></i>{w.data.code}</span>
+            <strong>{w.data.title}</strong>
+            <span class="muted c-proves">{w.data.proves}</span>
+            <span class="muted mono c-medium">{w.data.medium}</span>
+            <span class="mono">{w.data.year}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .bench-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .ruler { height: 26px; border-top: 1.5px solid var(--ink); position: relative; overflow: hidden; color: var(--ink); }
+  .ruler svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* Default (narrow screens, no JS, or "Tidy"): a grid of cards. */
+  .bench {
+    position: relative; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px 22px; padding: 34px 22px 26px;
+    border: 1.5px solid var(--ink); border-top: 0; border-radius: 0 0 18px 18px;
+    background: color-mix(in srgb, var(--paper-2) 55%, transparent); overflow: hidden;
+  }
+  .specimen {
+    --ink-card: var(--r-green); --on: var(--ink-text); --tilt: 0deg;
+    position: relative; min-height: 318px; padding: 18px 18px 14px;
+    background: var(--ink-card); color: var(--on); text-decoration: none; border-radius: 6px;
+    display: flex; flex-direction: column; gap: 10px; cursor: pointer;
+    transform: rotate(calc(var(--tilt) * .5)); transition: transform .35s cubic-bezier(.2, .9, .3, 1.3), opacity .25s, filter .25s, box-shadow .25s;
+    box-shadow: 0 1px 0 var(--shadow), 0 18px 28px -18px var(--shadow);
+    isolation: isolate; -webkit-user-select: none; user-select: none;
+  }
+  .specimen::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+    background-image: radial-gradient(color-mix(in srgb, var(--on) 22%, transparent) 1.1px, transparent 1.3px);
+    background-size: 7px 7px; -webkit-mask-image: linear-gradient(135deg, transparent 55%, #000 100%); mask-image: linear-gradient(135deg, transparent 55%, #000 100%);
+  }
+  .specimen:hover { transform: rotate(0deg) translateY(-4px); }
+  .sp-top { display: flex; justify-content: space-between; gap: 8px; opacity: .85; }
+  .sp-name { font-size: 1.7rem; line-height: .98; font-weight: 800; letter-spacing: -.02em; font-variation-settings: "opsz" 96, "wdth" 80; }
+  .sp-metric { display: flex; flex-direction: column; gap: 2px; }
+  .sp-metric b { font-size: 2.3rem; line-height: 1; font-weight: 800; font-variation-settings: "opsz" 96, "wdth" 76; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .sp-metric span { font-size: .92rem; line-height: 1.3; opacity: .92; }
+  .sp-preview { margin-top: auto; height: 64px; display: flex; align-items: end; overflow: hidden; }
+  .sp-preview :global(svg) { width: 100%; height: 64px; overflow: visible; }
+  .sp-preview :global(pre) { margin: 0; font-family: var(--font-mono); font-size: .68rem; line-height: 1.45; white-space: pre; overflow: hidden; }
+  .sp-foot { display: flex; justify-content: space-between; gap: 8px; border-top: 1.5px solid currentColor; padding-top: 8px; font-size: .72rem; }
+  .bench-hint { display: none; position: absolute; right: 22px; bottom: 16px; font-family: var(--font-hand); color: var(--ink-soft); transform: rotate(-4deg); pointer-events: none; }
+
+  .bench.spotlight .specimen:not(.lit) { opacity: .28; filter: grayscale(.7); }
+  .specimen.lit { transform: translateY(-16px) rotate(0deg) scale(1.04); z-index: 30 !important; }
+
+  /* Wide screens: specimens scattered across the bench. */
+  @media (min-width: 1100px) {
+    .bench:not(.tidy) { display: block; height: 800px; padding: 0; touch-action: pan-y; }
+    .bench:not(.tidy) .specimen {
+      position: absolute; width: 268px; cursor: grab; touch-action: none;
+      left: calc(12px + var(--x) * (100% - 268px - 24px)); top: calc(var(--y) + 24px);
+      transform: rotate(var(--tilt));
+    }
+    .bench:not(.tidy) .specimen:hover { transform: rotate(var(--tilt)) translateY(-4px); }
+    .bench:not(.tidy) .specimen.lit { transform: translateY(-16px) rotate(0deg) scale(1.04); }
+    .bench:not(.tidy) .specimen.dragging { cursor: grabbing; transition: opacity .25s, filter .25s; box-shadow: 0 2px 0 var(--shadow), 0 34px 40px -20px var(--shadow); }
+    .bench:not(.tidy) .bench-hint { display: block; }
+  }
+
+  .index { margin-top: 26px; border-top: 1.5px solid var(--ink); }
+  .index-rows { list-style: none; margin: 0; padding: 0; }
+  .index-row {
+    display: grid; grid-template-columns: 64px minmax(0, 1.2fr) minmax(0, 2fr) minmax(0, 1.4fr) 70px; gap: 16px;
+    padding: 12px 4px; border-bottom: 1px solid var(--grid-strong); align-items: baseline; text-decoration: none;
+  }
+  a.index-row:hover { background: color-mix(in srgb, var(--ink) 5%, transparent); }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; background: var(--sw); }
+  .index-head { color: var(--ink-soft); text-transform: uppercase; }
+  @media (max-width: 900px) {
+    .index-row { grid-template-columns: 52px minmax(0, 1fr) 64px; }
+    .c-proves, .c-medium { display: none; }
+  }
+  @media (max-width: 600px) { .specimen { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .specimen.lit { transform: rotate(0deg); } }
+</style>
+
+<script>
+  function initBench() {
+    const bench = document.querySelector<HTMLElement>('[data-bench-surface]');
+    if (!bench) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const wide = () => matchMedia('(min-width: 1100px)').matches && !bench.classList.contains('tidy');
+
+    // Ruler ticks
+    const ruler = document.querySelector<SVGSVGElement>('[data-ruler]');
+    if (ruler) {
+      const w = ruler.clientWidth || 1000;
+      let s = '';
+      for (let x = 0, i = 0; x < w; x += 12, i++) {
+        const big = i % 10 === 0, mid = i % 5 === 0;
+        s += `<line x1="${x + 0.5}" y1="0" x2="${x + 0.5}" y2="${big ? 14 : mid ? 9 : 5}" stroke="currentColor" stroke-width="1"/>`;
+        if (big && i) s += `<text x="${x + 3}" y="22" font-family="JetBrains Mono Variable, monospace" font-size="9" fill="currentColor">${i / 10}</text>`;
+      }
+      ruler.innerHTML = s;
+    }
+
+    // Spotlight from the hero phrases
+    const onSpot = (e: Event) => {
+      const ids = (e as CustomEvent<string[] | null>).detail;
+      bench.classList.toggle('spotlight', !!ids);
+      bench.querySelectorAll<HTMLElement>('.specimen').forEach((c) => c.classList.toggle('lit', !!ids && ids.includes(c.dataset.id!)));
+    };
+    document.addEventListener('lab:spotlight', onSpot);
+    document.addEventListener('astro:before-swap', () => document.removeEventListener('lab:spotlight', onSpot), { once: true });
+
+    // Tidy / scatter
+    document.querySelectorAll<HTMLButtonElement>('[data-bench]').forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.bench === 'tidy') { bench.classList.add('tidy'); return; }
+      bench.classList.remove('tidy');
+      bench.querySelectorAll<HTMLElement>('.specimen').forEach((c) => {
+        c.style.removeProperty('left'); c.style.removeProperty('top');
+        c.style.setProperty('--tilt', `${Math.round(Math.random() * 10 - 5)}deg`);
+      });
+    }));
+
+    // Drag with a little inertia (wide screens only)
+    let zTop = 10;
+    type Drag = { card: HTMLElement; x: number; y: number; l: number; t: number; moved: number; vx: number; vy: number; lx: number; ly: number; lt: number };
+    let drag: Drag | null = null;
+    const place = (card: HTMLElement, x: number, y: number) => {
+      const W = bench.clientWidth - card.offsetWidth, H = bench.clientHeight - card.offsetHeight;
+      card.style.left = `${Math.max(0, Math.min(W, x))}px`;
+      card.style.top = `${Math.max(0, Math.min(H, y))}px`;
+    };
+    bench.addEventListener('pointerdown', (e) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>('.specimen');
+      if (!card || !wide() || e.button !== 0) return;
+      drag = { card, x: e.clientX, y: e.clientY, l: card.offsetLeft, t: card.offsetTop, moved: 0, vx: 0, vy: 0, lx: e.clientX, ly: e.clientY, lt: performance.now() };
+      card.style.zIndex = String(++zTop);
+      card.setPointerCapture(e.pointerId);
+    });
+    bench.addEventListener('pointermove', (e) => {
+      if (!drag) return;
+      const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+      drag.moved = Math.max(drag.moved, Math.hypot(dx, dy));
+      if (drag.moved < 5) return;
+      drag.card.classList.add('dragging');
+      const now = performance.now(), dt = Math.max(1, now - drag.lt);
+      drag.vx = ((e.clientX - drag.lx) / dt) * 16; drag.vy = ((e.clientY - drag.ly) / dt) * 16;
+      drag.lx = e.clientX; drag.ly = e.clientY; drag.lt = now;
+      place(drag.card, drag.l + dx, drag.t + dy);
+      drag.card.style.setProperty('--tilt', `${Math.max(-14, Math.min(14, drag.vx * 1.4))}deg`);
+    });
+    const end = () => {
+      if (!drag) return;
+      const d = drag; drag = null;
+      d.card.classList.remove('dragging');
+      if (d.moved < 5) return;
+      d.card.dataset.justDragged = '1';
+      setTimeout(() => delete d.card.dataset.justDragged, 60);
+      const settle = `${Math.round(Math.random() * 8 - 4)}deg`;
+      if (reduced) { d.card.style.setProperty('--tilt', settle); return; }
+      let { vx, vy } = d;
+      const glide = () => {
+        vx *= 0.9; vy *= 0.9;
+        place(d.card, d.card.offsetLeft + vx, d.card.offsetTop + vy);
+        if (Math.abs(vx) + Math.abs(vy) > 0.4) requestAnimationFrame(glide);
+        else d.card.style.setProperty('--tilt', settle);
+      };
+      glide();
+    };
+    bench.addEventListener('pointerup', end);
+    bench.addEventListener('pointercancel', end);
+    bench.addEventListener('dragstart', (e) => e.preventDefault());
+    bench.addEventListener('click', (e) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>('.specimen');
+      if (card?.dataset.justDragged) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+  }
+  document.addEventListener('astro:page-load', initBench);
+</script>

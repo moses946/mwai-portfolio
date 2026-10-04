@@ -1,0 +1,84 @@
+---
+code: "05"
+order: 5
+title: WC26
+ink: pink
+year: "2026"
+medium: Python · CatBoost · LightGBM
+stack: [Python, pandas, NumPy, scikit-learn, CatBoost, LightGBM, Weights & Biases, Fjelstul World Cup Database]
+metric: "38/48"
+metricLabel: teams finished within one stage of my pre-tournament prediction
+proves: Small-data ML without leakage, scored against reality
+dek: Before the 2026 World Cup kicked off, I predicted how far each of the 48 teams would go and how many goals they'd score, using nothing but match history back to 1930. Then the tournament happened. Here is the scorecard.
+description: WC26 predicted every team's stage and goals at the 2026 World Cup from 96 years of match history. Scored against reality, 38 of 48 teams finished within one stage of the prediction, and it called Argentina as finalist.
+preview: bracket
+phrases: [predicts]
+metrics:
+  - { value: "38/48", label: "teams within one stage of the prediction (16 exactly right)" }
+  - { value: "0.92", label: "average stage error, better than the 1.58 the model expected from cross-validation" }
+  - { value: "2.81", label: "goals of error per team, against 4.21 for an \"everyone scores the average\" guess" }
+  - { value: "Runner-up", label: "Argentina, called correctly. My champion, France, finished fourth" }
+playground: bracket-fill
+playgroundTitle: The bracket that had to be valid
+playgroundNote: My submission vs the real 2026 results
+links:
+  - { label: Read the source, href: "https://github.com/moses946/WC26" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Pipeline from '../../components/case/Pipeline.astro';
+
+<Section n="01" title="The challenge">
+
+A closed-data competition: predict, for every team qualified for 2026, its total goals and the furthest stage it reaches. The only allowed source is the Fjelstul World Cup Database, 27 linked tables covering every tournament since 1930. No FIFA rankings, no Elo ratings, no betting odds.
+
+That sounds like plenty of data until you count rows: one row per team per tournament leaves about 490 training examples. In that regime a clever model overfits; the work is in the features.
+
+<Aside>The strategy doc I wrote before coding says it plainly: 70% of a winning recipe here is features, not model complexity.</Aside>
+</Section>
+
+<Section n="02" title="Method">
+
+<Pipeline steps={[
+  { k: 'Data', t: '27 Fjelstul tables', s: '1930–2022' },
+  { k: 'Features', t: '11 layers', s: 'history, recency, trajectory, squads…', hot: true },
+  { k: 'Validate', t: 'Leave one World Cup out', s: '2006, 2010, 2014, 2018, 2022' },
+  { k: 'Models', t: 'Goals: 4-model ensemble', s: 'Ridge, Poisson, CatBoost, LightGBM' },
+  { k: 'Constrain', t: 'Rank and fill', s: 'a bracket that can actually happen', hot: true },
+]} />
+
+- **No look-ahead, anywhere.** Every feature for a team at tournament *t* is computed only from tournaments before *t*. That one filter is the difference between a model that looks great in testing and one that works.
+- **Eleven feature layers:** historical strength, recency-weighted form (decaying by World Cup cycle), trajectory over recent tournaments, era-normalised scoring, experience, host advantage, squad continuity (returning players), manager tenure, knockout record, regression-to-the-mean signals and confederation strength.
+- **History has messy formats.** 1950 had a "final round" and 1974–82 had second group stages, so stages are mapped onto one seven-step scale, and finalists are split into champion and runner-up using the winners table.
+- **Debutants** (Cabo Verde, Curaçao, Jordan, Uzbekistan) have no history, so they get priors from how past debutants actually performed, not a global average.
+
+</Section>
+
+<Section n="03" title="The bracket that had to be valid">
+
+A classifier happily predicts six champions. A real tournament has exactly one champion, one runner-up, two semi-final losers, four quarter-final losers, eight round-of-16 losers, 16 round-of-32 losers and 16 group exits.
+
+So the stage models produce a strength score for every team, the teams are ranked, and slots are filled from the top. Goals are then calibrated to each stage's historical goals-per-match range, so a team predicted to go out in the groups can't be credited with 15 goals. Drag through the playground above to watch the fill happen.
+
+<Aside>The constraint is hard, not a penalty: the output is a bracket that could actually happen.</Aside>
+</Section>
+
+<Section n="04" title="The scorecard">
+
+In cross-validation on past tournaments, the model averaged 1.58 stages of error and a goals RMSE of 3.35. In 2026 it did better on stages and about as expected on goals:
+
+- **Stages:** 16 teams exactly right, 38 of 48 within one stage, average error 0.92. It called 32 of 48 teams' group-or-knockout fate correctly.
+- **Goals:** off by 2.81 per team on average, against 4.21 for a naive guess that every team scores the tournament average.
+- **The final:** Argentina as runner-up, correct. Spain won it 1–0 after extra time; I had them going out in the quarter-finals.
+- **The misses:** Germany and Brazil were overrated on reputation (predicted semi-finalists, out in the round of 32 and round of 16). England and Spain were underrated. History weights old giants heavily, which is exactly the bias the recency layers were meant to fight, and not enough.
+
+<Aside>Publishing your misses is the point. A model you only evaluate on the past is a story, not a test.</Aside>
+</Section>
+
+<Section n="05" title="What I'd change">
+
+- Give recency more weight for teams whose squads turned over, so reputations decay faster.
+- Simulate the actual bracket path (who you meet in the round of 32 matters) instead of filling slots by strength alone.
+- Report intervals, not points: a team's goal tally depends heavily on how many matches it plays.
+
+</Section>

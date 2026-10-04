@@ -1,0 +1,82 @@
+---
+code: "04"
+order: 4
+title: FitWeek
+ink: yellow
+year: "2026"
+medium: Expo · Express · Postgres
+stack: [Expo SDK 54, React Native 0.81, Expo Router, TypeScript, Express 5, PostgreSQL, Drizzle ORM, Zod, OpenAPI + Orval, Supabase Auth & Storage, Google Cloud Vision, ONNX background removal, IDM-VTON (Gradio), Cloud Run, EAS Build, pnpm workspaces]
+metric: "7 days"
+metricLabel: of outfits planned from your wardrobe and the forecast
+proves: A full-stack mobile product, from vision to virtual try-on
+dek: A wardrobe planner that photographs your clothes, sorts them automatically, and plans a week of outfits around the forecast without repeating itself, then shows you the outfit on you before you put it on.
+description: FitWeek is an AI wardrobe planner built with Expo, Express on Cloud Run and Postgres. It classifies garments with computer vision, plans outfits with a deterministic, tested recommender, and previews them with virtual try-on.
+preview: week
+phrases: [pocket]
+metrics:
+  - { value: "6", label: "weighted signals score every garment: recency, weather, freshness, variety, tags, colour" }
+  - { value: "0", label: "LLM calls in the recommender: it's deterministic, explainable and unit-tested" }
+  - { value: "18", label: "recommender tests, which also run against the copy powering the playground above" }
+  - { value: "1 swipe", label: "to swap any piece: the deck is ranked by the same engine" }
+playground: week-planner
+playgroundTitle: Plan my week in Nairobi
+playgroundNote: FitWeek's real recommender · live forecast
+links:
+  - { label: Read the source, href: "https://github.com/moses946/fitweek" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Pipeline from '../../components/case/Pipeline.astro';
+import Figure from '../../components/case/Figure.astro';
+import hero from '../../assets/work/fitweek-hero.png';
+
+<Section n="01" title="The problem">
+
+Most people wear a fraction of what they own, because deciding what to wear happens at 7am, half awake, without checking the weather or remembering what's in the laundry. FitWeek moves that decision to Sunday: plan the week once, swipe to adjust, and get dressed without thinking.
+
+<Figure wide={false} src={hero} alt="FitWeek feature tiles: plan your week, laundry-aware wardrobe, virtual try-on, and weather-smart filtering" caption="The four promises the app is built around." />
+</Section>
+
+<Section n="02" title="How it works">
+
+<Pipeline steps={[
+  { k: 'App', t: 'Photograph a garment' },
+  { k: 'API', t: 'Cloud Vision labels → 7 categories', hot: true },
+  { k: 'API', t: 'Background removal', s: 'local ONNX, soft-fail' },
+  { k: 'Engine', t: 'Score + plan the week', s: 'weather, recency, variety', hot: true },
+  { k: 'App', t: 'Swipe deck', s: 'swap any piece' },
+  { k: 'API', t: 'Virtual try-on', s: 'IDM-VTON via Gradio' },
+]} />
+
+- **Classification:** Cloud Vision returns labels like "Active Shirt" or "Blazer". A lookup maps them to seven categories, falling back from exact match to word match to substring match, and reports what it matched so the app can show its confidence.
+- **Background removal** runs on the server with a local ONNX model, and fails soft, so a bad cut-out never blocks saving a garment.
+- **Try-on** sends the garment and your model photo to IDM-VTON through a Gradio client and returns the rendered look to the app.
+
+</Section>
+
+<Section n="03" title="The recommender, deliberately boring">
+
+The outfit engine is a pure TypeScript library with no LLM in it. Each garment gets a score from six weighted signals: how long since you wore it (30%), fit for the day's weather (30%), variety (15%), freshness (10%), tag fit such as wool for cold days (10%) and colour neutrality (5%). Outfits are built from templates and scored again for completeness, cohesion and colour harmony. The week planner then avoids reusing any garment already planned that week, and only relaxes that rule when the wardrobe runs out.
+
+Laundry, skipped days and deleted items are filtered out before scoring, so the plan only ever uses what's clean.
+
+The playground above runs this exact library, copied from the FitWeek repo, against a sample wardrobe and Nairobi's live forecast.
+
+<Aside>Deterministic means testable. Every rule here has a unit test, and the same 18 tests run in this site's CI.</Aside>
+</Section>
+
+<Section n="04" title="Engineering">
+
+- A pnpm monorepo: the Expo app, the Express 5 API and shared libraries. API clients are generated from the OpenAPI spec with Orval, and requests are validated with Zod.
+- Postgres with Drizzle ORM, with a GIN index on garment tags. Supabase handles auth (email and Google) and storage.
+- The API ships to Cloud Run with liveness and readiness probes; the Android app builds with EAS. CI typechecks, tests and builds on every push.
+
+</Section>
+
+<Section n="05" title="What I'd change">
+
+- Learn from swipes: today the weights are fixed; a rejected suggestion should nudge them.
+- Extract colour from pixels instead of label hints.
+- Add occasion (work, gym, wedding) as a planning input next to the weather.
+
+</Section>

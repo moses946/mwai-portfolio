@@ -1,0 +1,75 @@
+---
+code: "03"
+order: 3
+title: GlycoSafe
+ink: red
+year: "2024–26"
+medium: Flutter · Python · Gemini
+stack: [Flutter, Dart, Python backend, Gemini 2.5 Flash, Firebase Auth, Google Sign-In, Syncfusion charts, Local notifications, Azure Pipelines]
+metric: "1 photo"
+metricLabel: to a per-food glycemic-load breakdown of your meal
+proves: Applied AI for diabetes care, built in Kenya
+dek: A mobile app that estimates the glycemic load of a meal from a single photo, so people managing diabetes can see what a plate of ugali or pilau will do to their blood sugar before they eat it.
+description: GlycoSafe estimates the glycemic load of a meal from a photo, with per-food breakdowns, an AI dietary assistant, medication reminders and meal history. Built with a team at JHUB Africa.
+preview: gauge
+phrases: [pocket]
+metrics:
+  - { value: "1 photo", label: "is all it takes to log a meal and get its glycemic load" }
+  - { value: "Per food", label: "volume and GL for every item on the plate, against your own threshold" }
+  - { value: "Rafiki", label: "a Gemini 2.5 Flash assistant that can log medication for you" }
+  - { value: "JHUB", label: "built with a team at JHUB Africa, live at glycosafe.jhubafrica.com" }
+playground: plate-scanner
+playgroundTitle: Scan a plate
+playgroundNote: Illustrative values · not medical advice
+links:
+  - { label: Watch the demo, href: "https://www.youtube.com/watch?v=LS817Ood-0A" }
+  - { label: Visit the site, href: "https://glycosafe.jhubafrica.com" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Pipeline from '../../components/case/Pipeline.astro';
+
+<Section n="01" title="The problem">
+
+Glycemic load (GL) tells you how much a meal will raise your blood sugar: the food's glycemic index times the carbohydrate you actually eat. Working it out by hand means identifying every food, weighing portions and looking each one up in GI tables that rarely include ugali, githeri or chapati.
+
+For people managing diabetes in Kenya, that's too much friction to do at every meal, so most don't.
+
+<Aside>GL = GI × grams of carbohydrate ÷ 100. The portion is the hard part.</Aside>
+</Section>
+
+<Section n="02" title="What we built">
+
+GlycoSafe turns that into one photo. You point the camera at your plate; the app sends the image to the backend, which identifies each food, estimates its volume and returns the macronutrients and GL per food and for the whole meal. The app shows whether the meal is balanced and whether it's under your personal GL threshold.
+
+<Pipeline steps={[
+  { k: 'App', t: 'Camera', s: 'frame the plate' },
+  { k: 'Backend', t: 'Recognise foods', hot: true },
+  { k: 'Backend', t: 'Estimate volume', s: 'ml per food' },
+  { k: 'Backend', t: 'GL + nutrition', s: 'per food and per meal', hot: true },
+  { k: 'App', t: 'Breakdown + history', s: 'safe vs your threshold' },
+]} />
+
+Around that core:
+
+- **Rafiki**, an assistant built on Gemini 2.5 Flash with a warm, Kenyan-food-first persona. It uses function calling to add a medication or update your profile from a chat message.
+- **Medication reminders** with custom schedules, scheduled as local notifications.
+- **History and trends** with charts, plus badges (Meal Pioneer, Meal Master, Consistency Champ, Knowledge Seeker) to make daily logging stick.
+
+<Aside>Rafiki's system prompt asks for Kenyan recipes first. Generic diet advice that suggests quinoa doesn't help anyone in Nairobi.</Aside>
+</Section>
+
+<Section n="03" title="The hard part: portions">
+
+Recognising "rice" in a photo is the easier half. GL depends on how much rice, and a photo has no scale. Our research draft describes a pipeline with a food classifier plus monocular depth estimation (and LiDAR where a phone has it) to recover volume. The latest app work adds an estimated volume in ml for each food, so you can see the portion the GL is based on and sanity-check it.
+
+<Aside>Showing the estimated portion next to the number makes the estimate honest: if it's wrong, you can see why.</Aside>
+</Section>
+
+<Section n="04" title="What I'd change">
+
+- Calibrate volume estimates against weighed meals, and show a confidence range instead of one number.
+- Let people correct a recognised food or portion, and feed those corrections back into the models.
+- Move secrets out of the app bundle and behind the backend before a wider release.
+
+</Section>

@@ -1,0 +1,28 @@
+{
+  "source": "Ported from moses946/chaos-engineering-simulation (js/topology.js, js/chaos-engine.js, js/metrics.js)",
+  "baseline": { "latency": 12, "errorRate": 0.1, "throughput": 1240, "health": 100 },
+  "services": [
+    { "id": "api-gateway", "name": "API Gateway", "short": "GW", "zone": "A", "tier": "edge" },
+    { "id": "user-svc", "name": "User Service", "short": "USR", "zone": "A", "tier": "app" },
+    { "id": "rec-engine", "name": "Recommendation Engine", "short": "REC", "zone": "A", "tier": "app" },
+    { "id": "content-cat", "name": "Content Catalog", "short": "CAT", "zone": "B", "tier": "app" },
+    { "id": "cdn", "name": "CDN Edge", "short": "CDN", "zone": "B", "tier": "edge" },
+    { "id": "auth-svc", "name": "Auth Service", "short": "AUTH", "zone": "A", "tier": "app" },
+    { "id": "db-primary", "name": "Database Primary", "short": "DB", "zone": "A", "tier": "data" },
+    { "id": "cache", "name": "Redis Cache", "short": "REDIS", "zone": "B", "tier": "data" }
+  ],
+  "edges": [
+    ["api-gateway", "user-svc"], ["api-gateway", "auth-svc"], ["api-gateway", "content-cat"],
+    ["user-svc", "rec-engine"], ["user-svc", "db-primary"], ["rec-engine", "content-cat"],
+    ["rec-engine", "cache"], ["content-cat", "cdn"], ["content-cat", "db-primary"],
+    ["auth-svc", "db-primary"], ["auth-svc", "cache"], ["cdn", "cache"]
+  ],
+  "faults": [
+    { "type": "instance-kill", "label": "Instance kill", "hypothesis": "maintain availability through redundancy", "impact": { "latency": 3, "errorRate": 5, "throughput": -20, "health": -15 } },
+    { "type": "latency", "label": "Latency injection", "hypothesis": "gracefully degrade under increased latency", "impact": { "latency": 10, "errorRate": 1, "throughput": -10, "health": -8 } },
+    { "type": "network-partition", "label": "Network partition", "hypothesis": "handle network isolation and failover correctly", "impact": { "latency": 5, "errorRate": 8, "throughput": -25, "health": -12 } },
+    { "type": "resource-exhaustion", "label": "Resource exhaustion", "hypothesis": "remain responsive under resource pressure", "impact": { "latency": 8, "errorRate": 3, "throughput": -15, "health": -10 } },
+    { "type": "cascade-failure", "label": "Cascade failure", "hypothesis": "contain failures without cascading collapse", "impact": { "latency": 15, "errorRate": 12, "throughput": -40, "health": -30 } },
+    { "type": "zone-outage", "label": "Zone outage", "hypothesis": "fail over to the other zone seamlessly", "impact": { "latency": 20, "errorRate": 15, "throughput": -50, "health": -40 } }
+  ]
+}

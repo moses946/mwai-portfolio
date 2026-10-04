@@ -1,0 +1,97 @@
+---
+import now from '../../data/now.json';
+---
+<section class="hero wrap" id="top" data-chaos>
+  <div class="hero-meta mono">
+    <span><i class="dot" aria-hidden="true"></i>Open to {now.openTo.toLowerCase()}</span>
+    <span data-clock>Nairobi · EAT</span>
+  </div>
+  <h1 class="thesis">
+    I build software that <span class="phrase" tabindex="0" data-ids="01,05" data-ink="--r-green" data-mark="circle">predicts</span>,{' '}
+    <span class="phrase" tabindex="0" data-ids="06" data-ink="--r-blue" data-mark="underline">survives failure</span>,{' '}
+    <span class="phrase" tabindex="0" data-ids="03,04,08" data-ink="--r-yellow" data-mark="highlight">fits in your pocket</span>, and{' '}
+    <span class="phrase" tabindex="0" data-ids="02,07" data-ink="--r-teal" data-mark="bracket">takes apart what isn't documented</span>.
+  </h1>
+  <div class="hero-notes">
+    <p>I'm a software engineer in Nairobi. Below are eight experiments, each with something you can poke at and the numbers to back it up.</p>
+    <span class="scrawl" aria-hidden="true">hover a phrase, it lights up the proof
+      <svg width="34" height="34" viewBox="0 0 34 34"><path d="M4 4c10 2 18 10 22 24m0 0l-6-4m6 4l3-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </span>
+  </div>
+</section>
+
+<style>
+  .hero { padding-block: clamp(40px, 7vw, 96px) clamp(28px, 4vw, 48px); position: relative; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--ink-soft); margin-bottom: 22px; }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--r-green); margin-right: 6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--r-green) 30%, transparent); }
+  .thesis { font-size: var(--step-4); line-height: 1.1; font-weight: 750; letter-spacing: -.025em; font-variation-settings: "opsz" 96, "wdth" 86; max-width: 17ch; }
+  .phrase { cursor: default; position: relative; white-space: nowrap; }
+  .hero-notes { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; margin-top: 30px; }
+  .hero-notes p { max-width: 58ch; color: var(--ink-soft); font-size: var(--step-1); line-height: 1.45; }
+  .scrawl { font-family: var(--font-hand); font-size: 1.05rem; color: var(--ink-soft); transform: rotate(-3deg); display: inline-block; }
+  .scrawl svg { vertical-align: middle; }
+  @media (max-width: 760px) {
+    .hero-notes { grid-template-columns: minmax(0, 1fr); }
+    .thesis { font-size: clamp(2.2rem, 10vw, 3.2rem); }
+    .phrase { white-space: normal; }
+    .scrawl { display: none; }
+  }
+</style>
+
+<script>
+  import { annotate, annotationGroup } from 'rough-notation';
+
+  type Annotation = ReturnType<typeof annotate>;
+  let marks: Annotation[] = [];
+
+  function draw() {
+    marks.forEach((m) => m.remove());
+    marks = [];
+    const phrases = [...document.querySelectorAll<HTMLElement>('.thesis .phrase')];
+    if (!phrases.length) return;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const css = getComputedStyle(document.documentElement);
+    for (const p of phrases) {
+      const type = p.dataset.mark as 'circle' | 'underline' | 'highlight' | 'bracket';
+      marks.push(annotate(p, {
+        type,
+        color: css.getPropertyValue(p.dataset.ink!).trim(),
+        strokeWidth: type === 'highlight' ? 1 : 3,
+        padding: type === 'circle' ? 10 : type === 'bracket' ? [2, 10] : 2,
+        brackets: ['left', 'right'],
+        iterations: type === 'circle' ? 2 : 1,
+        multiline: true,
+        animate: !reduced,
+        animationDuration: 700,
+      }));
+    }
+    annotationGroup(marks).show();
+  }
+
+  function wire() {
+    const phrases = document.querySelectorAll<HTMLElement>('.thesis .phrase');
+    if (!phrases.length) return;
+    const spot = (ids: string[] | null) => document.dispatchEvent(new CustomEvent('lab:spotlight', { detail: ids }));
+    phrases.forEach((p) => {
+      const ids = p.dataset.ids!.split(',');
+      const on = () => spot(ids);
+      const off = () => spot(null);
+      p.addEventListener('mouseenter', on);
+      p.addEventListener('focus', on);
+      p.addEventListener('mouseleave', off);
+      p.addEventListener('blur', off);
+      p.addEventListener('click', () => {
+        document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
+        on();
+        setTimeout(off, 2200);
+      });
+    });
+    (document.fonts?.ready ?? Promise.resolve()).then(draw);
+    let w = innerWidth;
+    const onResize = () => { if (Math.abs(innerWidth - w) > 40) { w = innerWidth; draw(); } };
+    addEventListener('resize', onResize);
+    document.addEventListener('astro:before-swap', () => { removeEventListener('resize', onResize); marks.forEach((m) => m.remove()); marks = []; }, { once: true });
+  }
+
+  document.addEventListener('astro:page-load', wire);
+</script>

@@ -1,0 +1,33 @@
+---
+import '../../styles/playgrounds.css';
+import FplRace from '../playgrounds/FplRace.tsx';
+import PacketBench from '../playgrounds/PacketBench.tsx';
+import PlateScanner from '../playgrounds/PlateScanner.tsx';
+import WeekPlanner from '../playgrounds/WeekPlanner.tsx';
+import BracketFill from '../playgrounds/BracketFill.tsx';
+import ChaosTopology from '../playgrounds/ChaosTopology.tsx';
+import TerminalReplay from '../playgrounds/TerminalReplay.tsx';
+import ConceptMap from '../playgrounds/ConceptMap.tsx';
+import hindcast from '../../data/mm-hindcast.json';
+import capture from '../../data/oraimo-synthetic-capture.json';
+import meals from '../../data/glycosafe-meals.json';
+import wc from '../../data/wc26-predicted-vs-actual.json';
+import chaos from '../../data/chaos-topology.json';
+
+interface Props { kind: string; title: string; note: string }
+const { kind, title, note } = Astro.props;
+---
+<section class="playground" aria-label={`Playground: ${title}`}>
+  <div class="pg-bar">
+    <span class="mono"><i class="lamp" aria-hidden="true"></i>PLAYGROUND · {title.toUpperCase()}</span>
+    <span class="mono muted">{note}</span>
+  </div>
+  {kind === 'fpl-race' && <FplRace client:visible season={hindcast.last} />}
+  {kind === 'packet-bench' && <PacketBench client:visible capture={capture} />}
+  {kind === 'plate-scanner' && <PlateScanner client:visible data={meals} />}
+  {kind === 'week-planner' && <WeekPlanner client:visible initialDate={new Date().toISOString().slice(0, 10)} />}
+  {kind === 'bracket-fill' && <BracketFill client:visible data={wc} />}
+  {kind === 'chaos-topology' && <ChaosTopology client:visible model={chaos} />}
+  {kind === 'terminal-replay' && <TerminalReplay client:visible />}
+  {kind === 'concept-map' && <ConceptMap client:visible />}
+</section>

@@ -1,0 +1,59 @@
+---
+import now from '../../data/now.json';
+import { classify } from '../../lib/mm';
+import { headline, snapshot } from '../../scripts/mmLive';
+
+const h = headline(classify(snapshot, false));
+const items = [
+  { k: 'lamp', v: h.lamp },
+  { k: 'text', v: h.text },
+  { k: 'sub', v: h.sub },
+  { k: 'clock', v: 'NAIROBI · EAT' },
+  { k: 'now', v: `NOW BUILDING: ${now.building.toUpperCase()}` },
+  { k: 'season', v: `LAST SEASON: MODEL ${snapshot.lastSeason.meanModel} · FPL ${snapshot.lastSeason.meanFpl} PTS/GW` },
+];
+---
+<div class="strip" aria-label="Live from the lab" data-live-strip>
+  <div class="strip-track mono">
+    {[0, 1].map((copy) => (
+      <div class="strip-set" aria-hidden={copy === 1 ? 'true' : undefined}>
+        {items.map((it) => (
+          <span class:list={[it.k === 'lamp' && 'lamp']} data-live={it.k} data-clock={it.k === 'clock' ? '' : undefined}>{it.v}</span>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .strip { margin-top: clamp(48px, 7vw, 88px); border-block: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); overflow: hidden; }
+  .strip-track { display: flex; width: max-content; animation: marquee 52s linear infinite; }
+  .strip:hover .strip-track { animation-play-state: paused; }
+  .strip-set { display: flex; gap: 48px; padding: 12px 24px; }
+  .strip-set span { white-space: nowrap; }
+  .lamp { color: var(--r-yellow); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .strip-track { animation: none; width: auto; }
+    .strip-set { flex-wrap: wrap; gap: 8px 32px; padding-inline: var(--gutter); }
+    .strip-set[aria-hidden] { display: none; }
+  }
+</style>
+
+<script>
+  import { loadLive, headline } from '../../scripts/mmLive';
+
+  function hydrate() {
+    const strip = document.querySelector('[data-live-strip]');
+    if (!strip) return;
+    const go = () => loadLive().then((s) => {
+      const h = headline(s);
+      strip.querySelectorAll<HTMLElement>('[data-live="lamp"]').forEach((el) => (el.textContent = h.lamp));
+      strip.querySelectorAll<HTMLElement>('[data-live="text"]').forEach((el) => (el.textContent = h.text));
+      strip.querySelectorAll<HTMLElement>('[data-live="sub"]').forEach((el) => (el.textContent = h.sub));
+      strip.setAttribute('data-status', s.status);
+    });
+    if ('requestIdleCallback' in window) requestIdleCallback(go, { timeout: 2500 }); else setTimeout(go, 1200);
+  }
+  document.addEventListener('astro:page-load', hydrate);
+</script>

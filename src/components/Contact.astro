@@ -1,0 +1,20 @@
+---
+import { SITE } from '../lib/site';
+interface Props { heading?: string }
+const { heading = 'Got a problem worth an experiment?' } = Astro.props;
+---
+<section class="wrap contact" id="contact" aria-labelledby="contact-title" data-chaos>
+  <p class="eyebrow">Contact</p>
+  <h2 id="contact-title">{heading}</h2>
+  <div class="btn-row row">
+    <span class="email" id="email-address">{SITE.email}</span>
+    <button class="btn solid" type="button" data-copy={SITE.email} data-copy-label="Email" data-copy-target="#email-address">Copy email</button>
+    {SITE.socials.map((s) => <a class="btn" href={s.href} target="_blank" rel="noreferrer">{s.label}</a>)}
+  </div>
+</section>
+<style>
+  .contact { padding-block: clamp(48px, 8vw, 110px) 0; }
+  h2 { font-size: var(--step-4); line-height: .95; font-weight: 800; letter-spacing: -.03em; font-variation-settings: "opsz" 96, "wdth" 80; max-width: 16ch; }
+  .row { margin-top: 26px; }
+  .email { font-family: var(--font-mono); font-size: var(--step-1); -webkit-user-select: all; user-select: all; padding: 10px 14px; border: 1.5px dashed var(--ink); border-radius: 8px; overflow-wrap: anywhere; background: var(--paper-card); }
+</style>

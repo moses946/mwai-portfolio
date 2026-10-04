@@ -1,0 +1,77 @@
+{
+  "fetchedAt": "2026-10-04T12:13:12.329Z",
+  "season": "2026-27",
+  "nextGw": 6,
+  "deadline": "2026-10-10T10:00:00+00:00",
+  "picks": [
+    {
+      "name": "B.Fernandes",
+      "team": "MUN",
+      "pos": "MID",
+      "xp": 6.41,
+      "fx": "TOT(H)",
+      "own": 38.5
+    },
+    {
+      "name": "Saka",
+      "team": "ARS",
+      "pos": "MID",
+      "xp": 5.95,
+      "fx": "LEE(H)",
+      "own": 13.8
+    },
+    {
+      "name": "Mbeumo",
+      "team": "MUN",
+      "pos": "MID",
+      "xp": 5.46,
+      "fx": "TOT(H)",
+      "own": 20.5
+    },
+    {
+      "name": "Rogers",
+      "team": "CHE",
+      "pos": "MID",
+      "xp": 5.32,
+      "fx": "BOU(H)",
+      "own": 40.6
+    },
+    {
+      "name": "Gabriel",
+      "team": "ARS",
+      "pos": "DEF",
+      "xp": 4.98,
+      "fx": "LEE(H)",
+      "own": 22.7
+    }
+  ],
+  "lastSeason": {
+    "season": "2025-26",
+    "gameweeks": 37,
+    "meanModel": 62.1,
+    "meanFpl": 54.5,
+    "winsVsFpl": 28
+  },
+  "currentGws": [
+    {
+      "gw": 2,
+      "m": 92,
+      "f": 76
+    },
+    {
+      "gw": 3,
+      "m": 31,
+      "f": 29
+    },
+    {
+      "gw": 4,
+      "m": 92,
+      "f": 53
+    },
+    {
+      "gw": 5,
+      "m": 51,
+      "f": 71
+    }
+  ]
+}

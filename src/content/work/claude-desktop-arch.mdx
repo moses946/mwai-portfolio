@@ -1,0 +1,76 @@
+---
+code: "07"
+order: 7
+title: Claude Desktop for Arch
+ink: purple
+year: "2026"
+medium: Bash · PKGBUILD · QEMU
+stack: [Bash, PKGBUILD / makepkg, pacman, Electron, QEMU/KVM, edk2-ovmf, virtiofsd, GitHub Actions, Arch Linux containers]
+metric: "1 bit"
+metricLabel: the SUID bit tar dropped, and the path fix that got the VM booting
+proves: Linux packaging and the gaps between distros
+dek: Anthropic ships Claude Desktop for Linux as a .deb for Ubuntu and Debian. I run Arch. This package repackages the official build, unmodified, and fixes the two things that stopped it working, including the VM behind Cowork.
+description: An unofficial Arch Linux and Manjaro package for Claude Desktop that repackages the official .deb, restores the chrome-sandbox SUID bit and maps Debian's OVMF firmware paths so Cowork's QEMU/KVM virtual machine boots.
+preview: term
+phrases: [takes-apart]
+metrics:
+  - { value: "1 bit", label: "SUID on chrome-sandbox, stripped by tar during extraction, restored in package()" }
+  - { value: "0", label: "binary changes: the official .deb is checksummed and repackaged as is" }
+  - { value: "4", label: "test suites in CI, none of which need root or KVM" }
+  - { value: "2", label: "architectures in the PKGBUILD: x86_64 and aarch64" }
+playground: terminal-replay
+playgroundTitle: The build, replayed
+playgroundNote: A scripted replay of makepkg with the findings
+links:
+  - { label: Read the source, href: "https://github.com/moses946/unofficial-claude-desktop" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Pipeline from '../../components/case/Pipeline.astro';
+
+<Section n="01" title="The problem">
+
+Arch isn't a supported platform, and the obstacles are mundane but real: pacman doesn't install `.deb` files, library packages have different names (`libasound2` is `alsa-lib`), and Cowork, the agentic mode that runs tasks in an isolated environment, turned out to be the hardest part.
+
+Before writing a line of PKGBUILD I took the official package apart and wrote down what was inside, so every decision below traces back to something observed.
+
+<Aside>The repo keeps a research log, a package analysis and a decisions log. The PKGBUILD is the short part.</Aside>
+</Section>
+
+<Section n="02" title="What I found inside">
+
+- Claude Desktop is an Electron app: about 163 MB compressed, about 549 MB installed.
+- **Cowork runs in a full QEMU/KVM virtual machine, not a container.** It boots with UEFI firmware (OVMF) and shares files through virtiofs.
+- Every runtime dependency has a direct Arch equivalent in the `extra` repository. virtiofsd ships a bundled fallback, so it needs no fix.
+- Two real incompatibilities: the firmware path, and a lost permission bit.
+
+</Section>
+
+<Section n="03" title="The two fixes">
+
+<Pipeline steps={[
+  { k: 'Fetch', t: 'Official .deb', s: 'SHA-256 verified' },
+  { k: 'Extract', t: 'ar + tar', s: 'drops the SUID bit' },
+  { k: 'Fix 1', t: 'chmod 4755 chrome-sandbox', hot: true },
+  { k: 'Fix 2', t: 'OVMF path symlinks', s: 'Debian → edk2 paths', hot: true },
+  { k: 'Install', t: 'pacman package' },
+]} />
+
+- **The sandbox bit.** Chromium's `chrome-sandbox` must be setuid root to build its namespace and seccomp sandbox. GNU tar strips the SUID bit when it extracts as a normal user, which is exactly how makepkg works, so the package restores it explicitly in `package()`.
+- **The firmware path.** Cowork looks for UEFI firmware at Debian's path, `/usr/share/OVMF/OVMF_CODE_4M.fd`. Arch's `edk2-ovmf` puts it at `/usr/share/edk2/x64/OVMF_CODE.4m.fd`. The install hook creates the compatibility symlinks, but only when the target file exists, so chat and Claude Code still install cleanly on machines that don't want Cowork.
+
+<Aside>Both bugs are invisible until runtime. That's why the tests below exist.</Aside>
+</Section>
+
+<Section n="04" title="Testing without root">
+
+CI runs in Arch Linux containers on GitHub Actions, which have no KVM and no root for the build user. So the tests check what can be checked honestly: PKGBUILD validation; an install simulation that runs every command from `prepare()`, `package()` and the install hooks against the real `.deb` and verifies the result; a runtime smoke test of the installed layout, including the SUID bit and the firmware symlinks; and a Cowork prerequisites checker that users can also run on their own machines.
+
+</Section>
+
+<Section n="05" title="What I'd change">
+
+- Publish to the AUR so updates arrive through an AUR helper.
+- Run the existing `check-upstream-version.sh` on a schedule and open a pull request with the new version and checksums when Anthropic ships a new `.deb`.
+
+</Section>
