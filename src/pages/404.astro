@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import { u } from '../lib/site';
+---
+<Base title="Experiment not found" description="This page doesn't exist.">
+  <section class="wrap nf" data-chaos>
+    <p class="mono code">ERROR 404 · SPECIMEN MISSING</p>
+    <h1 class="display">Experiment not found.</h1>
+    <p class="lead">Hypothesis: there was a page here. Result: there isn't. Disproven, and logged.</p>
+    <div class="btn-row">
+      <a class="btn solid" href={u('/#work')}>Back to the bench</a>
+      <a class="btn" href={u('/notes/')}>Read the lab notes</a>
+      <button class="btn" type="button" data-open-palette>Search with ⌘K</button>
+    </div>
+  </section>
+</Base>
+<style>
+  .nf { padding-block: clamp(60px, 12vw, 160px); }
+  .code { color: var(--bad); }
+  h1 { font-size: var(--step-4); margin: 12px 0 18px; }
+  .lead { font-size: var(--step-1); color: var(--ink-soft); max-width: 46ch; margin-bottom: 26px; }
+</style>

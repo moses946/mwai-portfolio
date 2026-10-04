@@ -1,0 +1,69 @@
+---
+import Base from '../../layouts/Base.astro';
+import Subscribe from '../../components/notes/Subscribe.astro';
+import { publishedNotes, formatDate, readingMinutes, tagSlug } from '../../lib/notes';
+import { u } from '../../lib/site';
+
+const notes = await publishedNotes();
+const byYear = new Map<number, typeof notes>();
+for (const n of notes) {
+  const y = n.data.pubDate.getFullYear();
+  byYear.set(y, [...(byYear.get(y) ?? []), n]);
+}
+const tags = [...new Set(notes.flatMap((n) => n.data.tags))].sort();
+---
+<Base title="Lab notes" description="Essays and post-mortems from Moses Mwai's experiments: what worked, what didn't, and the numbers.">
+  <div class="wrap notes-index">
+    <header>
+      <p class="eyebrow">Lab notes</p>
+      <h1 class="display">Essays, post-mortems and things I found out the hard way.</h1>
+    </header>
+    <div class="cols">
+      <div>
+        {notes.length === 0 && <p class="muted">The first notes are being written. Subscribe below to get them when they land.</p>}
+        {[...byYear.entries()].map(([year, list]) => (
+          <section aria-labelledby={`y-${year}`}>
+            <h2 id={`y-${year}`} class="mono year">{year}</h2>
+            <ol class="list">
+              {list.map((n) => (
+                <li>
+                  <a href={u(`/notes/${n.id}/`)}>
+                    <span class="mono meta">{formatDate(n.data.pubDate)} · {readingMinutes(n.body)} min read</span>
+                    <strong>{n.data.title}</strong>
+                    <span class="muted">{n.data.description}</span>
+                  </a>
+                  {n.data.tags.length > 0 && <p class="tags">{n.data.tags.map((t) => <a class="chip" href={u(`/notes/tags/${tagSlug(t)}/`)}>{t}</a>)}</p>}
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </div>
+      <div class="side">
+        <Subscribe />
+        {tags.length > 0 && (
+          <nav aria-label="Tags" class="tagnav">
+            <p class="eyebrow">Tags</p>
+            <div class="chips">{tags.map((t) => <a class="chip" href={u(`/notes/tags/${tagSlug(t)}/`)}>{t}</a>)}</div>
+          </nav>
+        )}
+      </div>
+    </div>
+  </div>
+</Base>
+<style>
+  .notes-index { padding-block: clamp(40px, 6vw, 80px) 0; }
+  h1 { font-size: var(--step-3); max-width: 22ch; margin-bottom: clamp(28px, 4vw, 48px); }
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 48px; align-items: start; }
+  .year { color: var(--ink-soft); border-bottom: 1.5px solid var(--ink); padding-bottom: 6px; margin-top: 12px; }
+  .list { list-style: none; margin: 0; padding: 0; }
+  .list li { border-bottom: 1px dashed var(--grid-strong); padding-block: 16px; }
+  .list li > a { display: flex; flex-direction: column; gap: 4px; text-decoration: none; }
+  .list strong { font-size: var(--step-1); line-height: 1.2; font-variation-settings: "opsz" 48; }
+  .list li > a:hover strong { text-decoration: underline; text-decoration-thickness: 2px; }
+  .meta, .muted { color: var(--ink-soft); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .tags .chip, .tagnav .chip { text-decoration: none; }
+  .side { display: flex; flex-direction: column; gap: 18px; position: sticky; top: 90px; }
+  @media (max-width: 860px) { .cols { grid-template-columns: minmax(0, 1fr); } .side { position: static; } }
+</style>

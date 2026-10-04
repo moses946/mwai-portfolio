@@ -1,0 +1,17 @@
+---
+import { u } from '../../lib/site';
+const feed = new URL(u('/rss.xml'), Astro.site).href;
+---
+<aside class="subscribe" aria-label="Subscribe">
+  <p class="eyebrow">Subscribe</p>
+  <p>New lab notes land in your feed reader the day they're published.</p>
+  <div class="btn-row">
+    <a class="pill" href={u('/rss.xml')}>RSS feed</a>
+    <button class="pill" type="button" data-copy={feed} data-copy-label="Feed URL">Copy feed URL</button>
+  </div>
+  <p class="mono feed">{feed}</p>
+</aside>
+<style>
+  .subscribe { border: 1.5px solid var(--ink); border-radius: 12px; padding: 16px 18px; background: var(--paper-card); display: flex; flex-direction: column; gap: 10px; }
+  .feed { color: var(--ink-soft); overflow-wrap: anywhere; }
+</style>

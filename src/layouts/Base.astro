@@ -20,7 +20,9 @@ interface Props {
 const { title, description = SITE.description, image, type = 'website', publishedTime, tags = [] } = Astro.props;
 const fullTitle = title ? `${title} · ${SITE.name}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL(image ?? u('/og.png'), Astro.site);
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ogPath = !image ? u('/og.png') : image.startsWith('/') && !(base && image.startsWith(`${base}/`)) ? u(image) : image;
+const ogImage = new URL(ogPath, Astro.site);
 const feed = new URL(u('/rss.xml'), Astro.site);
 ---
 <!doctype html>

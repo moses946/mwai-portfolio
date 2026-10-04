@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 
-type Packet = { id: number; t: number; dir: 'phone_to_watch' | 'watch_to_phone' | 'local'; op: string; handle: string | null; hex: string; note?: string };
+type Dir = 'phone_to_watch' | 'watch_to_phone' | 'local';
+type Packet = { id: number; t: number; dir: string; op: string; handle: string | null; hex: string; note?: string };
 interface Capture {
   label: string; note: string; session: string; packets: Packet[];
   reassembly: { connectionHandle: string; fragments: { pb: string; header: string; body: string }[]; l2cap: { length: number; cid: string }; att: { opcode: string; handle: string; value: string } };
@@ -9,7 +10,7 @@ type Verdict = { ok: boolean | null; why: string };
 type Hyp = { id: string; claim: string; needs: number; judge: (p: Packet, all: Packet[]) => Verdict };
 
 const bytes = (hex: string) => hex.split(' ').filter(Boolean);
-const DIR: Record<Packet['dir'], string> = { phone_to_watch: '→', watch_to_phone: '←', local: '·' };
+const DIR: Record<Dir, string> = { phone_to_watch: '→', watch_to_phone: '←', local: '·' };
 
 const HYPS: Hyp[] = [
   {
@@ -89,7 +90,7 @@ export default function PacketBench({ capture }: { capture: Capture }) {
                 <div key={p.id} role="row" className={`tr${p.id === sel.id ? ' sel' : ''}${isCited ? ' cited' : ''}${p.note?.startsWith('reassembled') ? ' fresh' : ''}`} onClick={() => setSelId(p.id)}>
                   <span role="cell">{p.id}</span>
                   <span role="cell">{p.t}</span>
-                  <span role="cell" aria-label={p.dir.replace(/_/g, ' ')}>{DIR[p.dir]}</span>
+                  <span role="cell" aria-label={p.dir.replace(/_/g, ' ')}>{DIR[p.dir as Dir] ?? '·'}</span>
                   <span role="cell">{p.op.replace(/_/g, ' ')}</span>
                   <span role="cell">{p.handle ?? ''}</span>
                   <span role="cell" className="hex">{p.hex ? (bytes(p.hex).length > 6 ? `${bytes(p.hex).slice(0, 6).join(' ')} …` : p.hex) : p.note}</span>

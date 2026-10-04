@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 type Status = 'healthy' | 'degraded' | 'failed' | 'recovering';
 type Service = { id: string; name: string; short: string; zone: string; tier: string };
 type Fault = { type: string; label: string; hypothesis: string; impact: { latency: number; errorRate: number; throughput: number; health: number } };
-interface Props { model: { baseline: { latency: number; errorRate: number; throughput: number; health: number }; services: Service[]; edges: [string, string][]; faults: Fault[] } }
+interface Props { model: { baseline: { latency: number; errorRate: number; throughput: number; health: number }; services: Service[]; edges: string[][]; faults: Fault[] } }
 
 const POS: Record<string, [number, number]> = {
   'api-gateway': [200, 62], 'user-svc': [92, 172], 'rec-engine': [212, 172], 'auth-svc': [330, 172], 'db-primary': [212, 292],

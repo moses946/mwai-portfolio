@@ -1,0 +1,20 @@
+---
+// Tufte-style margin note. In MDX: text<Sidenote>the aside</Sidenote> more text.
+const id = `sn-${Math.random().toString(36).slice(2, 9)}`;
+---
+<span class="sn"><label for={id} class="sn-ref" title="Show note"></label><input type="checkbox" id={id} class="sn-toggle" /><span class="sn-note" role="note"><slot /></span></span>
+<style>
+  .sn { counter-increment: sidenote; }
+  .sn-ref { cursor: pointer; }
+  .sn-ref::after { content: counter(sidenote); font-family: var(--font-mono); font-size: .7em; vertical-align: super; color: var(--link); padding: 0 1px; }
+  .sn-toggle { display: none; }
+  .sn-note { font-family: var(--font-hand); font-size: .92rem; line-height: 1.45; color: var(--ink-soft); }
+  .sn-note::before { content: counter(sidenote) ". "; font-family: var(--font-mono); font-size: .8em; }
+  @media (min-width: 1100px) {
+    .sn-note { float: right; clear: right; width: 240px; margin-right: -290px; margin-top: .2em; border-left: 2px solid var(--r-pink); padding-left: 12px; }
+  }
+  @media (max-width: 1099px) {
+    .sn-note { display: none; }
+    .sn-toggle:checked + .sn-note { display: block; margin: .6em 0; padding: 8px 12px; border-left: 2px solid var(--r-pink); background: var(--paper-card); }
+  }
+</style>

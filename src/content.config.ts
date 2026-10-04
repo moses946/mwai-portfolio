@@ -29,6 +29,9 @@ const work = defineCollection({
   }),
 });
 
+// Pages CMS writes "" for empty optional fields; treat that as missing.
+const blank = (v: unknown) => (v === '' || v === null ? undefined : v);
+
 // Fields mirror .pages.yml so posts written in Pages CMS validate here.
 const notes = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/notes' }),
@@ -37,11 +40,11 @@ const notes = defineCollection({
       title: z.string(),
       description: z.string(),
       pubDate: z.coerce.date(),
-      updatedDate: z.coerce.date().optional(),
+      updatedDate: z.preprocess(blank, z.coerce.date().optional()),
       tags: z.array(z.string()).default([]),
       draft: z.boolean().default(false),
-      cover: z.union([image(), z.string()]).optional(),
-      coverAlt: z.string().optional(),
+      cover: z.preprocess(blank, z.union([image(), z.string()]).optional()),
+      coverAlt: z.preprocess(blank, z.string().optional()),
     }),
 });
 
