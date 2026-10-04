@@ -4,10 +4,10 @@ import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
-// GitHub Pages serves this repo from /mwai-portfolio. For a custom domain,
-// set SITE_URL=https://your.domain and BASE_PATH=/ in the deploy workflow.
-const site = process.env.SITE_URL || 'https://moses946.github.io';
-const base = process.env.BASE_PATH || '/mwai-portfolio';
+// Netlify serves the site from the root of portfolio.mosesmwai.engineer.
+// SITE_URL and BASE_PATH override these, e.g. BASE_PATH=/mwai-portfolio for a sub-path host.
+const site = process.env.SITE_URL || 'https://portfolio.mosesmwai.engineer';
+const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   site,

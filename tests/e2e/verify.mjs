@@ -6,7 +6,7 @@ import { mkdirSync } from 'node:fs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
-const BASE = process.env.BASE_URL || 'http://127.0.0.1:4321/mwai-portfolio';
+const BASE = (process.env.BASE_URL || 'http://127.0.0.1:4321').replace(/\/$/, '');
 const OUT = process.argv[2] || 'screenshots';
 mkdirSync(OUT, { recursive: true });
 
@@ -193,7 +193,7 @@ for (const path of process.env.SKIP_ROUTES ? [] : ROUTES) {
   await page.mouse.up();
   await page.waitForTimeout(900);
   const b2 = await card.boundingBox();
-  check('bench: dragging moves a card without opening it', Math.abs(b2.x - b1.x) > 40 && page.url().endsWith('/mwai-portfolio/'), `${Math.round(b1.x)} -> ${Math.round(b2.x)}`);
+  check('bench: dragging moves a card without opening it', Math.abs(b2.x - b1.x) > 40 && page.url() === `${BASE}/`, `${Math.round(b1.x)} -> ${Math.round(b2.x)}`);
   await page.locator('.specimen[data-id="01"]').click();
   await page.waitForURL(/work\/midweek-merchant/, { timeout: 8000 }).catch(() => {});
   check('bench: clicking a card opens its case study', /work\/midweek-merchant/.test(page.url()), page.url());

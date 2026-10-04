@@ -1,0 +1,51 @@
+name: CI
+
+# Netlify builds and hosts the site (see netlify.toml). This workflow tests
+# every push and pull request, and triggers the daily Netlify rebuild.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Daily at 03:17 UTC (06:17 in Nairobi): publishes posts whose date has
+    # arrived and refreshes the Midweek Merchant fallback snapshot.
+    - cron: "17 3 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run check
+      - name: Blog checks (drafts, scheduling, feed, links)
+        run: npm run test:blog
+      - run: npm run build
+
+  rebuild:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger a Netlify production build
+        env:
+          # A Netlify build hook URL on main, saved as a repository secret.
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::warning::NETLIFY_BUILD_HOOK is not set, so the daily rebuild was skipped. See the README's Deploy section."
+            exit 0
+          fi
+          curl -fsS -X POST -d '{}' "$HOOK"

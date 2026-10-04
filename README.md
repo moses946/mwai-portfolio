@@ -2,14 +2,14 @@
 
 My portfolio, built as a lab notebook: eight experiments you can poke at, an about page and **lab notes** (the blog).
 
-- **Live site:** https://moses946.github.io/mwai-portfolio (once GitHub Pages is enabled, see [Deploy](#deploy))
+- **Live site:** https://portfolio.mosesmwai.engineer (hosted on Netlify, see [Deploy](#deploy))
 - **Stack:** Astro 7 (static), React islands for the playgrounds, MDX, plain CSS tokens, Vitest.
 
 ## Run it
 
 ```bash
 npm ci
-npm run dev        # http://localhost:4321/mwai-portfolio/
+npm run dev        # http://localhost:4321/
 npm run build      # refreshes Midweek Merchant data, then builds to dist/
 npm run build:offline   # same build without the network refresh
 npm test           # FitWeek recommender tests (vendored code)
@@ -76,8 +76,8 @@ The model beat FPL's prediction<Sidenote>Blind, before every deadline.</Sidenote
 ## RSS and cross-posting to DEV
 
 - **The feed** is at `/rss.xml`, with the full text of every post. Every page advertises it, so feed readers find it from the home page URL.
-- **Cross-posting to DEV:** set this up once. In DEV, go to **Settings → Extensions → Publishing to DEV Community from RSS**, paste `https://moses946.github.io/mwai-portfolio/rss.xml`, and tick **Mark the RSS source as canonical URL**. New posts then arrive in your DEV dashboard as drafts to publish. The DEV copy points back here, so search engines credit this site as the original.
-- **If you move to a custom domain,** update the feed URL in DEV.
+- **Cross-posting to DEV:** set this up once. In DEV, go to **Settings → Extensions → Publishing to DEV Community from RSS**, paste `https://portfolio.mosesmwai.engineer/rss.xml`, and tick **Mark the RSS source as canonical URL**. New posts then arrive in your DEV dashboard as drafts to publish. The DEV copy points back here, so search engines credit this site as the original.
+- **If the domain ever changes,** update the feed URL in DEV.
 
 ## Add or change an experiment
 
@@ -91,8 +91,17 @@ The Midweek Merchant ticker on the home page and the "This season, live" panel r
 
 ## Deploy
 
-`.github/workflows/deploy.yml` tests, checks and builds on every push. On `main` it also deploys to GitHub Pages, both on push and on a daily schedule.
+Netlify hosts the site at **portfolio.mosesmwai.engineer**. `netlify.toml` sets the build (`npm run build` into `dist/`, Node 22), so the Netlify UI settings don't matter.
 
-One-time setup: in the repository **Settings → Pages**, set **Source** to **GitHub Actions**.
+- **Production:** every push to `main` builds and goes live.
+- **Pull requests:** each one gets a deploy preview at `deploy-preview-<number>--mwai-portfolio.netlify.app`.
+- **Tests:** `.github/workflows/ci.yml` runs the unit tests, `astro check`, the blog checks and a build on every push and pull request.
 
-**Custom domain:** add repository variables `SITE_URL=https://your.domain` and `BASE_PATH=/`, then configure the domain in Settings → Pages.
+**Daily rebuild:** scheduled posts and the Midweek Merchant fallback snapshot only change when the site rebuilds. The CI workflow triggers a Netlify build every day at 06:17 Nairobi time. Set it up once:
+
+1. In Netlify, open **Project configuration → Build & deploy → Continuous deployment → Build hooks**, and add a hook named `daily` for the `main` branch.
+2. Copy the hook URL. In GitHub, open **Settings → Secrets and variables → Actions**, and add it as the repository secret `NETLIFY_BUILD_HOOK`.
+
+Until the secret exists, the scheduled run skips with a warning.
+
+**Another domain or a sub-path:** set the `SITE_URL` (e.g. `https://example.com`) and `BASE_PATH` (e.g. `/mwai-portfolio`) environment variables for the build. Every internal link, the feed and the sitemap follow them.

@@ -7,7 +7,7 @@ import { existsSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync 
 import { join } from 'node:path';
 
 const NOTES = 'src/content/notes';
-const BASE = '/mwai-portfolio';
+const BASE = (process.env.BASE_PATH || '/').replace(/\/$/, '');
 const fixtures = {
   'zz-draft-fixture.md': `---\ntitle: Draft fixture\ndescription: Should never be published.\npubDate: 2026-01-01\ntags: [fixture]\ndraft: true\n---\nDraft body.\n`,
   'zz-future-fixture.md': `---\ntitle: Future fixture\ndescription: Scheduled far in the future.\npubDate: 2099-01-01\ntags: [fixture]\ndraft: false\n---\nFuture body.\n`,
