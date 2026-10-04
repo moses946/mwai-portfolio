@@ -1,0 +1,636 @@
+{
+ "source": "Predictions: moses946/wc26 output/submission.csv (committed before kick-off). Actual results: 2026 FIFA World Cup, Wikipedia + FIFA Competition Summary v34.",
+ "champion": "ESP",
+ "final": "Spain 1\u20130 Argentina (a.e.t.)",
+ "totalGoals": 308,
+ "stages": [
+  "Group",
+  "Round of 32",
+  "Round of 16",
+  "Quarter-final",
+  "Semi-final",
+  "Runner-up",
+  "Champion"
+ ],
+ "score": {
+  "exactStage": 16,
+  "within1": 38,
+  "teams": 48,
+  "stageMAE": 0.92,
+  "goalsMAE": 2.81,
+  "goalsRMSE": 3.76,
+  "knockoutCall": 32,
+  "baselineGoalsMAE": 4.21,
+  "predChampion": "FRA",
+  "predFinalists": [
+   "FRA",
+   "ARG"
+  ],
+  "predSemis": [
+   "FRA",
+   "DEU",
+   "ARG",
+   "BRA"
+  ],
+  "actualSemis": [
+   "ENG",
+   "FRA",
+   "ESP",
+   "ARG"
+  ],
+  "semisHit": 2
+ },
+ "cv": {
+  "goalsRMSE": 3.35,
+  "goalsRMSEsd": 0.53,
+  "goalsMAE": 2.48,
+  "stageAcc": 0.38,
+  "stageF1": 0.177,
+  "stageMAE": 1.58,
+  "folds": [
+   2006,
+   2010,
+   2014,
+   2018,
+   2022
+  ]
+ },
+ "teams": [
+  {
+   "code": "AUT",
+   "name": "Austria",
+   "pred": {
+    "stage": 1,
+    "goals": 4
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 6
+   }
+  },
+  {
+   "code": "BEL",
+   "name": "Belgium",
+   "pred": {
+    "stage": 2,
+    "goals": 7
+   },
+   "actual": {
+    "stage": 3,
+    "goals": 14
+   }
+  },
+  {
+   "code": "BIH",
+   "name": "Bosnia and Herzegovina",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 5
+   }
+  },
+  {
+   "code": "HRV",
+   "name": "Croatia",
+   "pred": {
+    "stage": 2,
+    "goals": 7
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 6
+   }
+  },
+  {
+   "code": "CZE",
+   "name": "Czechia",
+   "pred": {
+    "stage": 1,
+    "goals": 6
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 2
+   }
+  },
+  {
+   "code": "ENG",
+   "name": "England",
+   "pred": {
+    "stage": 3,
+    "goals": 11
+   },
+   "actual": {
+    "stage": 4,
+    "goals": 20
+   }
+  },
+  {
+   "code": "FRA",
+   "name": "France",
+   "pred": {
+    "stage": 6,
+    "goals": 18
+   },
+   "actual": {
+    "stage": 4,
+    "goals": 20
+   }
+  },
+  {
+   "code": "DEU",
+   "name": "Germany",
+   "pred": {
+    "stage": 4,
+    "goals": 18
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 11
+   }
+  },
+  {
+   "code": "NLD",
+   "name": "Netherlands",
+   "pred": {
+    "stage": 3,
+    "goals": 12
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 11
+   }
+  },
+  {
+   "code": "NOR",
+   "name": "Norway",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 3,
+    "goals": 13
+   }
+  },
+  {
+   "code": "PRT",
+   "name": "Portugal",
+   "pred": {
+    "stage": 3,
+    "goals": 10
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 8
+   }
+  },
+  {
+   "code": "SCO",
+   "name": "Scotland",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 1
+   }
+  },
+  {
+   "code": "ESP",
+   "name": "Spain",
+   "pred": {
+    "stage": 3,
+    "goals": 10
+   },
+   "actual": {
+    "stage": 6,
+    "goals": 14
+   }
+  },
+  {
+   "code": "SWE",
+   "name": "Sweden",
+   "pred": {
+    "stage": 2,
+    "goals": 6
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 7
+   }
+  },
+  {
+   "code": "CHE",
+   "name": "Switzerland",
+   "pred": {
+    "stage": 2,
+    "goals": 6
+   },
+   "actual": {
+    "stage": 3,
+    "goals": 10
+   }
+  },
+  {
+   "code": "TUR",
+   "name": "Turkiye",
+   "pred": {
+    "stage": 2,
+    "goals": 6
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 3
+   }
+  },
+  {
+   "code": "DZA",
+   "name": "Algeria",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 5
+   }
+  },
+  {
+   "code": "CPV",
+   "name": "Cabo Verde",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 4
+   }
+  },
+  {
+   "code": "CIV",
+   "name": "Cote d'Ivoire",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 5
+   }
+  },
+  {
+   "code": "COD",
+   "name": "DR Congo",
+   "pred": {
+    "stage": 0,
+    "goals": 1
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 5
+   }
+  },
+  {
+   "code": "EGY",
+   "name": "Egypt",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 8
+   }
+  },
+  {
+   "code": "GHA",
+   "name": "Ghana",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 2
+   }
+  },
+  {
+   "code": "MAR",
+   "name": "Morocco",
+   "pred": {
+    "stage": 1,
+    "goals": 4
+   },
+   "actual": {
+    "stage": 3,
+    "goals": 10
+   }
+  },
+  {
+   "code": "SEN",
+   "name": "Senegal",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 10
+   }
+  },
+  {
+   "code": "ZAF",
+   "name": "South Africa",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 2
+   }
+  },
+  {
+   "code": "TUN",
+   "name": "Tunisia",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 2
+   }
+  },
+  {
+   "code": "AUS",
+   "name": "Australia",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 3
+   }
+  },
+  {
+   "code": "IRN",
+   "name": "Iran",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 3
+   }
+  },
+  {
+   "code": "IRQ",
+   "name": "Iraq",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 1
+   }
+  },
+  {
+   "code": "JPN",
+   "name": "Japan",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 8
+   }
+  },
+  {
+   "code": "JOR",
+   "name": "Jordan",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 3
+   }
+  },
+  {
+   "code": "QAT",
+   "name": "Qatar",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 2
+   }
+  },
+  {
+   "code": "SAU",
+   "name": "Saudi Arabia",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 1
+   }
+  },
+  {
+   "code": "KOR",
+   "name": "South Korea",
+   "pred": {
+    "stage": 1,
+    "goals": 4
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 2
+   }
+  },
+  {
+   "code": "UZB",
+   "name": "Uzbekistan",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 2
+   }
+  },
+  {
+   "code": "ARG",
+   "name": "Argentina",
+   "pred": {
+    "stage": 5,
+    "goals": 18
+   },
+   "actual": {
+    "stage": 5,
+    "goals": 19
+   }
+  },
+  {
+   "code": "BRA",
+   "name": "Brazil",
+   "pred": {
+    "stage": 4,
+    "goals": 17
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 10
+   }
+  },
+  {
+   "code": "COL",
+   "name": "Colombia",
+   "pred": {
+    "stage": 1,
+    "goals": 5
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 5
+   }
+  },
+  {
+   "code": "ECU",
+   "name": "Ecuador",
+   "pred": {
+    "stage": 1,
+    "goals": 4
+   },
+   "actual": {
+    "stage": 1,
+    "goals": 2
+   }
+  },
+  {
+   "code": "PRY",
+   "name": "Paraguay",
+   "pred": {
+    "stage": 1,
+    "goals": 4
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 3
+   }
+  },
+  {
+   "code": "URY",
+   "name": "Uruguay",
+   "pred": {
+    "stage": 2,
+    "goals": 7
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 3
+   }
+  },
+  {
+   "code": "CAN",
+   "name": "Canada",
+   "pred": {
+    "stage": 1,
+    "goals": 5
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 9
+   }
+  },
+  {
+   "code": "MEX",
+   "name": "Mexico",
+   "pred": {
+    "stage": 2,
+    "goals": 9
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 10
+   }
+  },
+  {
+   "code": "USA",
+   "name": "United States",
+   "pred": {
+    "stage": 2,
+    "goals": 8
+   },
+   "actual": {
+    "stage": 2,
+    "goals": 11
+   }
+  },
+  {
+   "code": "CUW",
+   "name": "Curacao",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 1
+   }
+  },
+  {
+   "code": "HTI",
+   "name": "Haiti",
+   "pred": {
+    "stage": 1,
+    "goals": 3
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 2
+   }
+  },
+  {
+   "code": "PAN",
+   "name": "Panama",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 0
+   }
+  },
+  {
+   "code": "NZL",
+   "name": "New Zealand",
+   "pred": {
+    "stage": 0,
+    "goals": 2
+   },
+   "actual": {
+    "stage": 0,
+    "goals": 4
+   }
+  }
+ ]
+}

@@ -1,0 +1,63 @@
+---
+code: "06"
+order: 6
+title: ChaosLab
+ink: blue
+year: "2026"
+medium: JavaScript · Canvas
+stack: [Vanilla JavaScript, HTML5 Canvas, CSS Grid, No dependencies]
+metric: "8 services"
+metricLabel: break one and watch the rest of the system cope
+proves: Distributed-systems failure, made visible
+dek: A browser simulation of chaos engineering, the practice Netflix made famous with Chaos Monkey. Kill a service, partition the network or take out a whole availability zone, then watch the failure spread and the system heal.
+description: ChaosLab is a zero-dependency browser simulator for chaos engineering. It injects six kinds of fault into an eight-service, two-zone architecture and animates cascades, live metrics and recovery.
+preview: graph
+phrases: [survives]
+metrics:
+  - { value: "8", label: "services across two availability zones, with 12 dependencies between them" }
+  - { value: "6", label: "fault types × 3 intensities, from one killed instance to a whole zone outage" }
+  - { value: "0", label: "dependencies: 1,349 lines of vanilla JavaScript and Canvas" }
+  - { value: "100", label: "health when steady; the experiment lifecycle shows how far it falls and how it climbs back" }
+playground: chaos-topology
+playgroundTitle: Break it
+playgroundNote: The real topology and impact model, ported
+links:
+  - { label: Read the source, href: "https://github.com/moses946/chaos-engineering-simulation" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Figure from '../../components/case/Figure.astro';
+import steady from '../../assets/work/chaoslab-01-steady-state.png';
+import injected from '../../assets/work/chaoslab-02-chaos-injection.png';
+
+<Section n="01" title="Why build it">
+
+Chaos engineering is easy to explain and hard to feel. "Deliberately break production to learn how it fails" sounds reckless until you see that the alternative is learning during a real outage. ChaosLab makes the loop visible: define steady state, form a hypothesis, inject a fault, detect it, contain the cascade, recover.
+
+<Aside>The first principle of chaos engineering: build a hypothesis around steady-state behaviour, then try to disprove it.</Aside>
+</Section>
+
+<Section n="02" title="The system under test">
+
+A Netflix-like architecture: an API gateway in front of user, auth and content-catalogue services, a recommendation engine, a CDN edge, a primary database and a Redis cache, spread across zones A and B. The simulator renders the topology on a canvas with traffic particles flowing along each dependency, and tracks health, latency (p50/p95/p99), error rate and throughput against a baseline of 12 ms, 0.1% errors and 1,240 requests a second.
+
+<Figure src={steady} alt="ChaosLab in steady state: eight healthy services, health 100, flat latency and error sparklines" caption="Steady state: every service green, health 100." />
+</Section>
+
+<Section n="03" title="Faults, cascades and recovery">
+
+- **Six experiments,** each with its own impact model: instance kill, latency injection (3–18× normal latency), network partition (cuts every edge to a service), resource exhaustion, cascade failure and zone outage.
+- **Cascades:** a severe fault, a cascade experiment or a zone outage degrades every direct dependency of the failed service. The spread stops there, which is the containment the hypothesis is testing.
+- **Recovery** is staged: failed services turn blue (recovering) and come back one at a time, 800 ms apart, while metrics ease back to baseline instead of snapping.
+- **Chaos Monkey mode** keeps injecting random faults on an interval, never two at once, with auto-recovery between them.
+
+<Figure src={injected} alt="ChaosLab during a chaos injection: a failed node with a red cross, degraded neighbours, health down and errors spiking" caption="Mid-experiment: one service down, its neighbours degraded, health falling." />
+</Section>
+
+<Section n="04" title="What I'd change">
+
+- Model replicas, so killing one instance of a replicated service is survivable and the difference shows.
+- Add SLOs and error budgets, so an experiment passes or fails against a stated objective.
+- Export experiment runs, so results can be compared across topology changes.
+
+</Section>

@@ -1,0 +1,92 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Playground from '../../components/case/Playground.astro';
+import { INKS, inkStyle, u } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+  return work.map((entry, i) => ({ params: { slug: entry.id }, props: { entry, next: work[(i + 1) % work.length] } }));
+}
+
+const { entry, next } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const accentOn = INKS[d.ink].on === 'light' ? 'var(--paper-text)' : 'var(--ink-text)';
+---
+<Base title={d.title} description={d.description}>
+  <article style={`--accent: var(--r-${d.ink}); --accent-on: ${accentOn};`}>
+    <header class="case-head" style={inkStyle(d.ink)} transition:name={`exp-${d.code}`}>
+      <div class="wrap">
+        <a class="back mono" href={u('/#work')}>← Back to the bench</a>
+        <p class="mono kicker">EXP-{d.code} · {INKS[d.ink].name} · {d.year} · {d.medium.toUpperCase()}</p>
+        <h1>{d.title}</h1>
+        <p class="dek">{d.dek}</p>
+        <dl class="metrics">
+          {d.metrics.map((m) => (
+            <div class="metric"><dt class="visually-hidden">{m.label}</dt><dd><b>{m.value}</b><span>{m.label}</span></dd></div>
+          ))}
+        </dl>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <Playground kind={d.playground} title={d.playgroundTitle} note={d.playgroundNote} />
+
+      <div class="case-body prose">
+        <Content />
+      </div>
+
+      <section class="cs-foot" aria-label="Stack and links">
+        <p class="eyebrow">Built with</p>
+        <div class="chips">{d.stack.map((s) => <span class="chip">{s}</span>)}</div>
+        {d.links.length > 0 && (
+          <div class="btn-row links">
+            {d.links.map((l, i) => <a class:list={['btn', i === 0 && 'solid']} href={l.href} target="_blank" rel="noreferrer">{l.label} ↗</a>)}
+          </div>
+        )}
+      </section>
+
+      <a class="next" href={u(`/work/${next.id}/`)} style={inkStyle(next.data.ink)}>
+        <span class="mono">NEXT SPECIMEN · EXP-{next.data.code}</span>
+        <b>{next.data.title} →</b>
+      </a>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .case-head { background: var(--ink-card); color: var(--on); border-bottom: 1.5px solid var(--ink); position: relative; overflow: hidden; }
+  .case-head::after {
+    content: ""; position: absolute; right: -40px; top: -40px; width: 420px; height: 420px; pointer-events: none;
+    background-image: radial-gradient(color-mix(in srgb, var(--on) 25%, transparent) 1.6px, transparent 1.8px); background-size: 10px 10px;
+    -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 70%); mask-image: radial-gradient(circle, #000 0%, transparent 70%);
+  }
+  .case-head .wrap { padding-block: clamp(28px, 5vw, 56px) clamp(28px, 4vw, 44px); position: relative; z-index: 1; }
+  .back { display: inline-flex; gap: 8px; align-items: center; text-decoration: none; margin-bottom: 26px; }
+  .back:hover { text-decoration: underline; }
+  .kicker { margin-bottom: 10px; }
+  h1 { font-size: var(--step-4); line-height: .95; font-weight: 820; letter-spacing: -.03em; font-variation-settings: "opsz" 96, "wdth" 78; }
+  .dek { font-size: var(--step-1); max-width: 54ch; margin-top: 18px; line-height: 1.45; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); border-top: 1.5px solid currentColor; margin: 32px 0 0; }
+  .metric { padding: 16px 16px 4px 0; }
+  .metric + .metric { padding-left: 16px; border-left: 1.5px solid currentColor; }
+  dd { margin: 0; display: flex; flex-direction: column; gap: 6px; }
+  dd b { font-size: var(--step-3); line-height: 1; font-weight: 800; font-variation-settings: "opsz" 96, "wdth" 76; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  dd span { font-size: .92rem; line-height: 1.35; }
+
+  .case-body { padding-block: clamp(24px, 4vw, 48px) 0; }
+  .case-body :global(.cs-section > p), .case-body :global(.cs-section li) { max-width: var(--measure); }
+  .cs-foot { padding-block: 34px; border-top: 1.5px dashed var(--grid-strong); margin-top: 24px; }
+  .links { margin-top: 18px; }
+  .next {
+    display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 22px; margin-bottom: 8px;
+    border: 1.5px solid var(--ink); border-radius: 14px; background: var(--ink-card); color: var(--on); text-decoration: none; transition: transform .2s;
+  }
+  .next:hover { transform: translateY(-3px); }
+  .next b { font-size: var(--step-2); font-variation-settings: "opsz" 96, "wdth" 82; }
+  @media (max-width: 700px) {
+    .metric + .metric { border-left: 0; padding-left: 0; }
+    .metric { border-bottom: 1px solid color-mix(in srgb, currentColor 40%, transparent); }
+  }
+</style>

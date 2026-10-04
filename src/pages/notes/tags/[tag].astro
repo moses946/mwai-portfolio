@@ -1,0 +1,37 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { publishedNotes, formatDate, readingMinutes, tagSlug } from '../../../lib/notes';
+import { u } from '../../../lib/site';
+
+export async function getStaticPaths() {
+  const notes = await publishedNotes();
+  const tags = new Map<string, string>();
+  notes.forEach((n) => n.data.tags.forEach((t) => tags.set(tagSlug(t), t)));
+  return [...tags.entries()].map(([slug, label]) => ({
+    params: { tag: slug },
+    props: { label, notes: notes.filter((n) => n.data.tags.some((t) => tagSlug(t) === slug)) },
+  }));
+}
+const { label, notes } = Astro.props;
+---
+<Base title={`Notes tagged “${label}”`} description={`Lab notes about ${label}.`}>
+  <div class="wrap tag-page">
+    <a class="mono back" href={u('/notes/')}>← All notes</a>
+    <h1 class="display">Tagged “{label}”</h1>
+    <ol class="list">
+      {notes.map((n) => (
+        <li><a href={u(`/notes/${n.id}/`)}><span class="mono muted">{formatDate(n.data.pubDate)} · {readingMinutes(n.body)} min</span><strong>{n.data.title}</strong><span class="muted">{n.data.description}</span></a></li>
+      ))}
+    </ol>
+  </div>
+</Base>
+<style>
+  .tag-page { padding-block: clamp(40px, 6vw, 80px) 0; max-width: 900px; }
+  .back { text-decoration: none; }
+  h1 { font-size: var(--step-3); margin: 18px 0 24px; }
+  .list { list-style: none; margin: 0; padding: 0; }
+  .list li { border-bottom: 1px dashed var(--grid-strong); padding-block: 16px; }
+  .list a { display: flex; flex-direction: column; gap: 4px; text-decoration: none; }
+  .list strong { font-size: var(--step-1); }
+  .muted { color: var(--ink-soft); }
+</style>

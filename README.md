@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# Moses Mwai's Lab
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+My portfolio, built as a lab notebook: eight experiments you can poke at, an about page and **lab notes** (the blog).
 
-## Available Scripts
+- **Live site:** https://portfolio.mosesmwai.engineer (hosted on Netlify, see [Deploy](#deploy))
+- **Stack:** Astro 7 (static), React islands for the playgrounds, MDX, plain CSS tokens, Vitest.
 
-In the project directory, you can run:
+## Run it
 
-### `npm start`
+```bash
+npm ci
+npm run dev        # http://localhost:4321/
+npm run build      # refreshes Midweek Merchant data, then builds to dist/
+npm run build:offline   # same build without the network refresh
+npm test           # FitWeek recommender tests (vendored code)
+npm run check      # astro check (types + templates)
+npm run test:blog  # builds with fixture posts: drafts and future posts hidden, feed valid, no broken links
+npm run test:e2e   # Playwright: every page at phone/desktop widths, every playground, live-data fallbacks
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+`test:e2e` expects `npm run preview` running and Playwright installed (`npm i -D playwright`).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Node 22.12 or newer is required.
 
-### `npm test`
+## Where things live
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Path | What it is |
+|---|---|
+| `src/content/work/*.mdx` | One file per experiment: frontmatter for the card, metrics and links; MDX body for the write-up |
+| `src/content/notes/*.md(x)` | Lab notes (blog posts) |
+| `src/components/playgrounds/` | The interactive demo on each case study (React) |
+| `src/components/home/` | Hero, specimen bench, live strip, notes preview, about teaser |
+| `src/data/` | Data the playgrounds use (Midweek Merchant snapshot, WC26 scorecard, ChaosLab topology…) |
+| `src/data/now.json` | The "Now" block: what I'm building, reading and listening to. Edit freely |
+| `src/lib/outfit-recommender/` | FitWeek's recommender, copied from the FitWeek repo. Tests in `tests/outfit-recommender/` |
+| `src/styles/global.css` | Design tokens (paper, Riso inks, type scale) |
+| `.pages.yml` | Pages CMS configuration for writing posts in the browser |
 
-### `npm run build`
+## Write a lab note
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### From the browser or your phone (Pages CMS)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Go to [app.pagescms.org](https://app.pagescms.org) and sign in with GitHub. The first time, install the Pages CMS GitHub App on this repository.
+2. Open **mwai-portfolio → Lab notes → Add an entry**.
+3. Fill in the title, summary, publish date and tags, then write the post.
+4. Untick **Draft** when it's ready, and save. Saving commits a Markdown file to `src/content/notes/`, and the deploy workflow publishes it.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Drafts** (`draft: true`) never appear on the site, in the RSS feed or in the sitemap.
+- **Scheduling:** a publish date in the future keeps the post hidden until that day. The site rebuilds every morning at 06:17 Nairobi time, so a scheduled post goes live on its date.
+- **Images** you upload go to `public/notes/media/`.
 
-### `npm run eject`
+### From a code editor
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Add `src/content/notes/my-post.md` (or press `.` on the GitHub repo page to open github.dev):
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```md
+---
+title: My post
+description: One or two sentences for lists, link previews and RSS.
+pubDate: 2026-10-20
+tags: [ml, post-mortem]
+draft: false
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Write in Markdown here.
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Use `.mdx` when you want components. For example, margin notes:
 
-## Learn More
+```mdx
+import Sidenote from '../../components/notes/Sidenote.astro';
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The model beat FPL's prediction<Sidenote>Blind, before every deadline.</Sidenote> in 28 of 37 gameweeks.
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## RSS and cross-posting to DEV
 
-### Code Splitting
+- **The feed** is at `/rss.xml`, with the full text of every post. Every page advertises it, so feed readers find it from the home page URL.
+- **Cross-posting to DEV:** set this up once. In DEV, go to **Settings → Extensions → Publishing to DEV Community from RSS**, paste `https://portfolio.mosesmwai.engineer/rss.xml`, and tick **Mark the RSS source as canonical URL**. New posts then arrive in your DEV dashboard as drafts to publish. The DEV copy points back here, so search engines credit this site as the original.
+- **If the domain ever changes,** update the feed URL in DEV.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Add or change an experiment
 
-### Analyzing the Bundle Size
+1. Copy any file in `src/content/work/` and edit the frontmatter. The schema in `src/content.config.ts` tells you every field. `ink` picks the Riso colour, and `order` sets the position on the bench.
+2. Write the case study with the `Section`, `Aside`, `Pipeline` and `Figure` components (see existing files).
+3. Pick a `playground` from the existing ones, or add a component to `src/components/playgrounds/` and register it in `src/components/case/Playground.astro`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Live data
 
-### Making a Progressive Web App
+The Midweek Merchant ticker on the home page and the "This season, live" panel read the model's public JSON from the `data` branch of [midweek-merchant](https://github.com/moses946/midweek-merchant). That branch refreshes every 6 hours, so the captain pick moves to the next gameweek by itself. `scripts/snapshot-mm.mjs` stores a copy at build time as the fallback when GitHub can't be reached.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Deploy
 
-### Advanced Configuration
+Netlify hosts the site at **portfolio.mosesmwai.engineer**. `netlify.toml` sets the build (`npm run build` into `dist/`, Node 22), so the Netlify UI settings don't matter.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **Production:** every push to `main` builds and goes live.
+- **Pull requests:** each one gets a deploy preview at `deploy-preview-<number>--mwai-portfolio.netlify.app`.
+- **Tests:** `.github/workflows/ci.yml` runs the unit tests, `astro check`, the blog checks and a build on every push and pull request.
 
-### Deployment
+**Daily rebuild:** scheduled posts and the Midweek Merchant fallback snapshot only change when the site rebuilds. The CI workflow triggers a Netlify build every day at 06:17 Nairobi time. Set it up once:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+1. In Netlify, open **Project configuration → Build & deploy → Continuous deployment → Build hooks**, and add a hook named `daily` for the `main` branch.
+2. Copy the hook URL. In GitHub, open **Settings → Secrets and variables → Actions**, and add it as the repository secret `NETLIFY_BUILD_HOOK`.
 
-### `npm run build` fails to minify
+Until the secret exists, the scheduled run skips with a warning.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Another domain or a sub-path:** set the `SITE_URL` (e.g. `https://example.com`) and `BASE_PATH` (e.g. `/mwai-portfolio`) environment variables for the build. Every internal link, the feed and the sitemap follow them.

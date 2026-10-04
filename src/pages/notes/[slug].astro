@@ -1,0 +1,93 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Subscribe from '../../components/notes/Subscribe.astro';
+import { publishedNotes, formatDate, readingMinutes, tagSlug } from '../../lib/notes';
+import { u } from '../../lib/site';
+
+export async function getStaticPaths() {
+  const notes = await publishedNotes();
+  return notes.map((entry, i) => ({ params: { slug: entry.id }, props: { entry, newer: notes[i - 1], older: notes[i + 1] } }));
+}
+const { entry, newer, older } = Astro.props;
+const { Content, headings } = await render(entry);
+const d = entry.data;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const cover = typeof d.cover === 'object' ? d.cover : undefined;
+const coverUrl = typeof d.cover === 'string' ? d.cover : undefined;
+---
+<Base title={d.title} description={d.description} type="article" publishedTime={d.pubDate} tags={d.tags} image={cover?.src ?? coverUrl}>
+  <div class="progress" aria-hidden="true"><i data-progress></i></div>
+  <article class="wrap note">
+    <header class="note-head">
+      <a class="mono back" href={u('/notes/')}>← Lab notes</a>
+      <p class="mono meta">
+        <time datetime={d.pubDate.toISOString()}>{formatDate(d.pubDate)}</time> · {readingMinutes(entry.body)} min read
+        {d.updatedDate && <> · updated <time datetime={d.updatedDate.toISOString()}>{formatDate(d.updatedDate)}</time></>}
+      </p>
+      <h1>{d.title}</h1>
+      <p class="dek">{d.description}</p>
+      {d.tags.length > 0 && <p class="tags">{d.tags.map((t) => <a class="chip" href={u(`/notes/tags/${tagSlug(t)}/`)}>{t}</a>)}</p>}
+    </header>
+    {cover && <Image class="cover" src={cover} alt={d.coverAlt ?? ''} widths={[720, 1100, 1440]} sizes="(max-width: 900px) 100vw, 900px" />}
+    {coverUrl && <img class="cover" src={coverUrl} alt={d.coverAlt ?? ''} loading="lazy" />}
+    {toc.length >= 3 && (
+      <details class="toc" open>
+        <summary class="mono">Contents</summary>
+        <ol>{toc.map((h) => <li class={`d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+      </details>
+    )}
+    <div class="prose body">
+      <Content />
+    </div>
+    <footer class="note-foot">
+      <Subscribe />
+      <nav class="pager" aria-label="More notes">
+        {newer ? <a href={u(`/notes/${newer.id}/`)}><span class="mono">Newer</span>{newer.data.title}</a> : <span />}
+        {older && <a class="older" href={u(`/notes/${older.id}/`)}><span class="mono">Older</span>{older.data.title}</a>}
+      </nav>
+    </footer>
+  </article>
+</Base>
+<style>
+  .progress { position: fixed; left: 0; right: 0; top: 0; height: 4px; z-index: 50; pointer-events: none; }
+  .progress i { display: block; height: 100%; width: 100%; transform: scaleX(0); transform-origin: left; background: var(--r-pink); }
+  .note { padding-block: clamp(36px, 5vw, 72px) 0; max-width: calc(66ch + 2 * var(--gutter) + 0px); counter-reset: sidenote; }
+  @media (min-width: 1100px) { .note { max-width: calc(66ch + 300px + 2 * var(--gutter)); padding-right: calc(300px + var(--gutter)); } }
+  .back { text-decoration: none; }
+  .meta { color: var(--ink-soft); margin-top: 22px; }
+  h1 { font-size: var(--step-3); line-height: 1.05; font-weight: 800; letter-spacing: -.02em; font-variation-settings: "opsz" 96, "wdth" 86; margin-top: 10px; }
+  .dek { font-size: var(--step-1); color: var(--ink-soft); margin-top: 14px; line-height: 1.45; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .tags .chip { text-decoration: none; }
+  .cover { margin-top: 26px; width: 100%; height: auto; border: 1.5px solid var(--ink); border-radius: 10px; }
+  .toc { margin-top: 26px; border: 1.5px dashed var(--ink); border-radius: 10px; padding: 10px 16px; background: var(--paper-card); }
+  .toc summary { cursor: pointer; color: var(--ink-soft); }
+  .toc ol { margin: 8px 0 4px; padding-left: 1.2em; display: grid; gap: 4px; }
+  .toc .d3 { margin-left: 1em; list-style: circle; }
+  .toc a { text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .body { margin-top: 28px; }
+  .body :global(h2), .body :global(h3) { scroll-margin-top: 90px; }
+  .note-foot { margin-top: 48px; display: flex; flex-direction: column; gap: 18px; }
+  .pager { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .pager a { display: flex; flex-direction: column; gap: 4px; text-decoration: none; border: 1.5px solid var(--ink); border-radius: 10px; padding: 12px 14px; max-width: 46%; min-width: 220px; flex: 1; background: var(--paper-card); }
+  .pager .older { text-align: right; }
+  .pager .mono { color: var(--ink-soft); }
+</style>
+<script>
+  function progress() {
+    const bar = document.querySelector<HTMLElement>('[data-progress]');
+    if (!bar) return;
+    const update = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(1, h.scrollTop / max) : 0})`;
+    };
+    update();
+    addEventListener('scroll', update, { passive: true });
+    document.addEventListener('astro:before-swap', () => removeEventListener('scroll', update), { once: true });
+  }
+  document.addEventListener('astro:page-load', progress);
+</script>

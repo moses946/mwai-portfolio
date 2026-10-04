@@ -1,0 +1,51 @@
+---
+code: "08"
+order: 8
+title: Tutilo
+ink: orange
+year: "2025"
+medium: React · AI
+stack: [React 19, TypeScript, Vite, React Router, AI-generated study material]
+metric: "Notes → map"
+metricLabel: an AI study co-pilot that turns your slides into a study path
+proves: Taking an AI product from idea to waitlist
+dek: A study co-pilot for students. Upload your notes or slides and Tutilo turns them into a visual learning path, a connected concept map, quizzes, flashcards and a tutor you can ask questions.
+description: Tutilo is an AI study co-pilot that turns notes and slides into a personalised learning blueprint, concept maps, adaptive quizzes, flashcards and a tutor chat. Priced in shillings for Kenyan students.
+preview: map
+phrases: [pocket]
+metrics:
+  - { value: "4", label: "ways to learn from one upload: blueprint, concept map, quizzes and flashcards, tutor chat" }
+  - { value: "Ksh 0", label: "free tier to start, with Plus at Ksh 500 and Pro at Ksh 1,000 a month" }
+  - { value: "Feynman", label: "mode on Plus: explain a topic back and get told where you're wrong" }
+playground: concept-map
+playgroundTitle: Notes in, concept map out
+playgroundNote: A precomputed sample · no live AI call
+links:
+  - { label: Landing page source, href: "https://github.com/moses946/tutilo-landing" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+
+<Section n="01" title="The problem">
+
+Students get a semester's worth of slides and no map through them. Revision turns into rereading, which feels productive and isn't. Tutilo starts from the material you already have and builds the structure you're missing.
+
+</Section>
+
+<Section n="02" title="What it does">
+
+- **Blueprint:** upload notes or slides and the AI maps the key concepts into a visual learning path, so you know where to start.
+- **Concept map:** the course as a connected graph, so relationships between topics are visible and the next thing to study is obvious.
+- **Practice:** adaptive quizzes, flashcards for active recall, and a tutor chat for instant help.
+- **Formats:** text, audio and video explainers, plus a Feynman mode where you teach the topic back.
+
+Pricing is in shillings and built for students: a free tier with a cheaper model and five uploads, then Plus and Pro for URL sources, smarter maps, video explanations and unlimited notebooks.
+
+<Aside>Pricing in shillings, not dollars, is a product decision as much as a currency one.</Aside>
+</Section>
+
+<Section n="03" title="Where it is">
+
+The landing page and waitlist are built (React 19, TypeScript, Vite). The product itself lives in the Tutilo organisation's repositories, and this write-up will grow as that work is ready to show.
+
+</Section>

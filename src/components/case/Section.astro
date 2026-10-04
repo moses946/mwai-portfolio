@@ -1,0 +1,21 @@
+---
+interface Props { n: string; title: string }
+const { n, title } = Astro.props;
+---
+<section class="cs-section">
+  <h2><span class="mono">{n}</span>{title}</h2>
+  <slot />
+</section>
+<style>
+  .cs-section { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 250px); column-gap: 52px; align-items: start; padding-block: 34px 10px; border-top: 1.5px dashed var(--grid-strong); }
+  .cs-section > :global(*) { grid-column: 1; }
+  .cs-section > :global(* + *) { margin-top: 1em; }
+  .cs-section > :global(.aside) { grid-column: 2; grid-row: 1 / span 40; margin-top: 0; }
+  .cs-section > :global(.wide) { grid-column: 1 / -1; }
+  h2 { font-size: var(--step-2); font-weight: 760; letter-spacing: -.015em; font-variation-settings: "opsz" 72; display: flex; gap: 12px; align-items: baseline; margin: 0 0 4px; line-height: 1.15; }
+  h2 .mono { color: var(--ink-soft); font-weight: 400; }
+  @media (max-width: 900px) {
+    .cs-section { grid-template-columns: minmax(0, 1fr); }
+    .cs-section > :global(.aside) { grid-column: 1; grid-row: auto; margin-top: 1em; }
+  }
+</style>

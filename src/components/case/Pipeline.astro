@@ -1,0 +1,33 @@
+---
+interface Step { k: string; t: string; s?: string; hot?: boolean }
+interface Props { steps: Step[]; note?: string }
+const { steps, note } = Astro.props;
+---
+<figure class="pipeline wide">
+  <ol>
+    {steps.map((st) => (
+      <li class:list={[st.hot && 'hot']}>
+        <span class="k mono">{st.k}</span>
+        <strong>{st.t}</strong>
+        {st.s && <span class="s">{st.s}</span>}
+      </li>
+    ))}
+  </ol>
+  {note && <figcaption class="hand">{note}</figcaption>}
+</figure>
+<style>
+  .pipeline { margin: 1.4em 0 0; border: 1.5px solid var(--ink); border-radius: 12px; background: var(--paper-card); padding: 18px; }
+  ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 26px; }
+  li { position: relative; flex: 1 1 112px; min-width: 0; border: 1.5px solid var(--ink); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px; background: var(--paper); }
+  li + li::before { content: "→"; position: absolute; left: -21px; top: 50%; transform: translateY(-50%); font-family: var(--font-mono); font-weight: 700; }
+  li.hot { background: var(--accent, var(--r-yellow)); color: var(--accent-on, var(--ink)); }
+  .k { font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  li.hot .k { color: inherit; }
+  strong { font-size: 1rem; line-height: 1.2; }
+  .s { font-size: .86rem; line-height: 1.35; }
+  figcaption { margin-top: 12px; color: var(--ink-soft); }
+  @media (max-width: 640px) {
+    ol { flex-direction: column; gap: 22px; }
+    li + li::before { content: "↓"; left: 50%; top: -20px; transform: translateX(-50%); }
+  }
+</style>

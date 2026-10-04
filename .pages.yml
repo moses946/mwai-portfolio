@@ -1,0 +1,75 @@
+# Pages CMS: write lab notes from the browser (or your phone).
+# 1. Go to https://app.pagescms.org, sign in with GitHub and open this repository.
+# 2. Write a post. Saving commits a Markdown file to src/content/notes/.
+# 3. The deploy workflow publishes it. Drafts stay hidden; a future publish
+#    date goes live on the first daily rebuild on or after that date.
+# The fields below mirror the `notes` schema in src/content.config.ts.
+media:
+  - name: notes
+    label: Note images
+    input: public/notes/media
+    output: /notes/media
+    categories: [image]
+    rename: safe
+
+content:
+  - name: notes
+    label: Lab notes
+    type: collection
+    path: src/content/notes
+    filename: "{primary}.md"
+    format: yaml-frontmatter
+    view:
+      fields: [title, pubDate, draft]
+      primary: title
+      sort: [pubDate, title]
+      default:
+        sort: pubDate
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+        options:
+          maxlength: 120
+      - name: description
+        label: Summary
+        type: text
+        required: true
+        description: One or two sentences. Shown in lists, link previews and the RSS feed.
+      - name: pubDate
+        label: Publish date
+        type: date
+        required: true
+        description: Pick a future date to schedule the post.
+        options:
+          format: yyyy-MM-dd
+      - name: updatedDate
+        label: Last updated (optional)
+        type: date
+        default: ""
+        options:
+          format: yyyy-MM-dd
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+      - name: draft
+        label: Draft (hidden from the site and the feed)
+        type: boolean
+        default: true
+      - name: cover
+        label: Cover image (optional)
+        type: image
+        options:
+          media: notes
+      - name: coverAlt
+        label: Cover image description
+        type: string
+      - name: body
+        label: Post
+        type: rich-text
+        options:
+          format: markdown
+          media: notes

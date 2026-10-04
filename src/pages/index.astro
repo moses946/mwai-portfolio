@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Bench from '../components/home/Bench.astro';
+import LiveStrip from '../components/home/LiveStrip.astro';
+import NotesPreview from '../components/home/NotesPreview.astro';
+import AboutTeaser from '../components/home/AboutTeaser.astro';
+import Contact from '../components/Contact.astro';
+
+const work = (await getCollection('work')).sort((a, b) => a.data.order - b.data.order);
+---
+<Base>
+  <Hero />
+  <Bench work={work} />
+  <LiveStrip />
+  <NotesPreview />
+  <AboutTeaser />
+  <Contact />
+</Base>

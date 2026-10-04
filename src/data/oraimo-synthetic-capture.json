@@ -1,0 +1,177 @@
+{
+ "label": "Synthetic capture \u00b7 illustrative only",
+ "note": "Generated for this portfolio to show how Oraimo Lab records evidence. It is not a capture of the Oraimo Watch 6R or any real device.",
+ "session": "watchface-A (synthetic)",
+ "packets": [
+  {
+   "id": 1,
+   "t": 0,
+   "dir": "local",
+   "op": "connect",
+   "handle": null,
+   "hex": "",
+   "note": "connect requested"
+  },
+  {
+   "id": 2,
+   "t": 212,
+   "dir": "local",
+   "op": "connection_state_change",
+   "handle": null,
+   "hex": "",
+   "note": "Connected"
+  },
+  {
+   "id": 3,
+   "t": 252,
+   "dir": "local",
+   "op": "mtu_change",
+   "handle": null,
+   "hex": "",
+   "note": "MTU 247"
+  },
+  {
+   "id": 4,
+   "t": 432,
+   "dir": "phone_to_watch",
+   "op": "discover_services",
+   "handle": null,
+   "hex": "",
+   "note": "4 services, 11 characteristics"
+  },
+  {
+   "id": 5,
+   "t": 467,
+   "dir": "phone_to_watch",
+   "op": "subscribe",
+   "handle": "0x0015",
+   "hex": "01 00"
+  },
+  {
+   "id": 6,
+   "t": 777,
+   "dir": "phone_to_watch",
+   "op": "write",
+   "handle": "0x0012",
+   "hex": "1F 0A 03 00 2C"
+  },
+  {
+   "id": 7,
+   "t": 815,
+   "dir": "watch_to_phone",
+   "op": "notify",
+   "handle": "0x0015",
+   "hex": "A5 0A 00 7E"
+  },
+  {
+   "id": 8,
+   "t": 1125,
+   "dir": "phone_to_watch",
+   "op": "write",
+   "handle": "0x0012",
+   "hex": "1F 0B 02 01"
+  },
+  {
+   "id": 9,
+   "t": 1163,
+   "dir": "watch_to_phone",
+   "op": "notify",
+   "handle": "0x0015",
+   "hex": "A5 0B 00 7E"
+  },
+  {
+   "id": 10,
+   "t": 1473,
+   "dir": "phone_to_watch",
+   "op": "write",
+   "handle": "0x0012",
+   "hex": "1F 0C 03 00 31"
+  },
+  {
+   "id": 11,
+   "t": 1511,
+   "dir": "watch_to_phone",
+   "op": "notify",
+   "handle": "0x0015",
+   "hex": "A5 0C 00 7E"
+  },
+  {
+   "id": 12,
+   "t": 1821,
+   "dir": "phone_to_watch",
+   "op": "write",
+   "handle": "0x0012",
+   "hex": "1F 0D 01"
+  },
+  {
+   "id": 13,
+   "t": 1859,
+   "dir": "watch_to_phone",
+   "op": "notify",
+   "handle": "0x0015",
+   "hex": "A5 0D 00 7E"
+  },
+  {
+   "id": 14,
+   "t": 2119,
+   "dir": "phone_to_watch",
+   "op": "write",
+   "handle": "0x0018",
+   "hex": "02 10 00"
+  },
+  {
+   "id": 15,
+   "t": 2160,
+   "dir": "watch_to_phone",
+   "op": "notify",
+   "handle": "0x0015",
+   "hex": "A5 0E 01 7E"
+  }
+ ],
+ "reassembly": {
+  "connectionHandle": "0x0040",
+  "fragments": [
+   {
+    "pb": "start",
+    "hex": "40 20 1B 00 37 00 04 00 1B 15 00 40 41 42 43 44 45 46 47 48 49 4A 4B 4C 4D 4E 4F 50 51 52 53",
+    "header": "40 20 1B 00",
+    "body": "37 00 04 00 1B 15 00 40 41 42 43 44 45 46 47 48 49 4A 4B 4C 4D 4E 4F 50 51 52 53"
+   },
+   {
+    "pb": "continuing",
+    "hex": "40 10 1B 00 54 55 56 57 58 59 5A 5B 5C 5D 5E 5F 60 61 62 63 64 65 66 67 68 69 6A 6B 6C 6D 6E",
+    "header": "40 10 1B 00",
+    "body": "54 55 56 57 58 59 5A 5B 5C 5D 5E 5F 60 61 62 63 64 65 66 67 68 69 6A 6B 6C 6D 6E"
+   },
+   {
+    "pb": "continuing",
+    "hex": "40 10 05 00 6F 70 71 72 73",
+    "header": "40 10 05 00",
+    "body": "6F 70 71 72 73"
+   }
+  ],
+  "l2cap": {
+   "length": 55,
+   "cid": "0x0004 (ATT)"
+  },
+  "att": {
+   "opcode": "0x1B Handle Value Notification",
+   "handle": "0x0015",
+   "value": "40 41 42 43 44 45 46 47 48 49 4A 4B 4C 4D 4E 4F 50 51 52 53 54 55 56 57 58 59 5A 5B 5C 5D 5E 5F 60 61 62 63 64 65 66 67 68 69 6A 6B 6C 6D 6E 6F 70 71 72 73"
+  }
+ },
+ "hypotheses": [
+  {
+   "id": "H-01",
+   "claim": "Writes to handle 0x0012 always start with byte 0x1F",
+   "needs": 3,
+   "test": "write0012_starts_1F"
+  },
+  {
+   "id": "H-02",
+   "claim": "Byte 1 of a 0x0012 write is echoed back in the next notification on 0x0015",
+   "needs": 2,
+   "test": "echo_counter"
+  }
+ ]
+}

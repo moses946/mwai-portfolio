@@ -1,0 +1,37 @@
+---
+import { u } from '../lib/site';
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+const links = [
+  { label: 'Work', href: u('/#work'), match: /^\/work/ },
+  { label: 'Notes', href: u('/notes/'), match: /^\/notes/ },
+  { label: 'About', href: u('/about/'), match: /^\/about/ },
+];
+---
+<header class="masthead">
+  <div class="wrap">
+    <a class="wordmark" href={u('/')} aria-label="Moses Mwai, home"><b>Moses Mwai</b><span class="mono">LAB NOTEBOOK · NAIROBI</span></a>
+    <nav class="nav" aria-label="Primary">
+      {links.map((l) => <a href={l.href} aria-current={l.match.test(path) ? 'page' : undefined}>{l.label}</a>)}
+      <button class="pill" type="button" data-open-palette aria-haspopup="dialog">Jump <kbd>⌘K</kbd></button>
+    </nav>
+  </div>
+</header>
+<style>
+  .masthead { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    background: color-mix(in srgb, var(--paper) 84%, transparent); border-bottom: 1.5px solid var(--ink); }
+  .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; flex-wrap: wrap; }
+  .wordmark { display: flex; align-items: baseline; gap: 10px; text-decoration: none; }
+  .wordmark b { font-size: 1.25rem; font-weight: 800; font-variation-settings: "opsz" 96, "wdth" 82; letter-spacing: -.01em; }
+  .wordmark span { color: var(--ink-soft); }
+  .nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .nav a { text-decoration: none; padding: 6px 12px; border-radius: 999px; border: 1.5px solid transparent; font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: .04em; }
+  .nav a:hover { border-color: var(--ink); }
+  .nav a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+  @media (max-width: 600px) {
+    .wordmark span { display: none; }
+    .wrap { padding-block: 10px; gap: 8px; }
+    .nav { gap: 2px; }
+    .nav a, .nav .pill { padding: 5px 9px; }
+    .nav kbd { display: none; }
+  }
+</style>

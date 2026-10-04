@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Contact from '../components/Contact.astro';
+import portrait from '../assets/mwai-about.jpg';
+import now from '../data/now.json';
+import { u } from '../lib/site';
+
+const principles = [
+  { t: 'Decide what "working" means first', d: 'Midweek Merchant was judged on picks made before the deadline, never in hindsight. WC26 was scored in public after the tournament, misses included.', href: '/work/midweek-merchant/' },
+  { t: 'Evidence before assumptions', d: "Oraimo Lab has no protocol decoder because nobody has earned one yet. A wrong guess that looks like knowledge is worse than an honest gap.", href: '/work/oraimo-lab/' },
+  { t: 'Make failure visible', d: 'ChaosLab exists because "break it on purpose" only makes sense once you can watch a cascade spread and heal.', href: '/work/chaoslab/' },
+  { t: 'Boring where it counts', d: "FitWeek's recommender is deterministic and unit-tested. The clever parts sit at the edges, where a wrong answer is cheap.", href: '/work/fitweek/' },
+  { t: 'Build for where people are', d: 'GlycoSafe starts from ugali and pilau, not quinoa. Tutilo prices in shillings.', href: '/work/glycosafe/' },
+];
+const heading = [
+  { k: 'Optimization', t: 'Choosing well under constraints', d: 'A mixed-integer program that picks a squad, captain, transfers and chips within a budget, and a bracket filler that has to respect every slot in the draw.', links: [{ label: 'Midweek Merchant', href: '/work/midweek-merchant/' }, { label: 'WC26', href: '/work/wc26/' }] },
+  { k: 'Planning', t: 'Thinking a few moves ahead', d: "Forecasts eight gameweeks out, chip timing searched one move at a time, and a lot of chess. Planning is the part of robotics I'm most curious about.", links: [{ label: 'How the planner works', href: '/work/midweek-merchant/' }] },
+  { k: 'Robotics', t: 'Machines that sense and act', d: "Where it all started. The closest I've come so far is talking to real hardware: Oraimo Lab reads a smartwatch over Bluetooth, byte by byte, and ChaosLab is about systems that keep working when parts of them fail.", links: [{ label: 'Oraimo Lab', href: '/work/oraimo-lab/' }, { label: 'ChaosLab', href: '/work/chaoslab/' }] },
+];
+const toolbox = ['Python', 'TypeScript', 'Dart / Flutter', 'React & React Native', 'Node & Express', 'PostgreSQL', 'pandas & scikit-learn', 'CatBoost & LightGBM', 'Mixed-integer programming', 'Firebase & Supabase', 'GitHub Actions', 'Cloud Run & Render', 'Linux packaging', 'Bluetooth LE'];
+---
+<Base title="About" description="Moses Mwai is a software engineer in Nairobi drawn to decision-making systems: planning, optimization and robotics. He builds forecasting models, mobile apps and tools, and proves the results with numbers.">
+  <div class="wrap about-page">
+    <section class="intro" data-chaos>
+      <figure class="polaroid">
+        <div class="duotone"><Image src={portrait} alt="Moses Mwai standing outdoors in a dark polo shirt" widths={[360, 640]} sizes="(max-width: 760px) 300px, 380px" loading="eager" /></div>
+        <figcaption>Nairobi, Kenya</figcaption>
+      </figure>
+      <div>
+        <p class="eyebrow">About</p>
+        <h1 class="display">I'm Moses. I like problems where the right move isn't obvious.</h1>
+        <div class="prose story">
+          <p>My way into software engineering was a Disney show most people wouldn't expect: <em>Lab Rats</em>. Watching the characters, Donald especially, invent their way out of every problem hooked me on engineering. I was drawn to hardware first, but software won me over: you can start with an abstract problem in the morning and have something real by the evening.</p>
+          <p>The pull toward machines that decide and act never went away. What I'm most curious about now is robotics and the decision-making underneath it: planning, search and optimization. I keep picking that kind of problem on purpose. Midweek Merchant chooses a fantasy football squad by solving an integer program, WC26 had to fill a World Cup bracket that obeys hard constraints, and at the chessboard I'm doing the same thing by hand, trying to see one move further than the person across from me.</p>
+          <p>Away from the keyboard I play chess, and I play and mod Minecraft. Modding scratches the same itch as reverse engineering: take a system you didn't write and make it do something new. I'm also pushing myself to get outside more, hiking and cycling. That's the newest habit, and the one I have to work hardest at.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="next-title" data-chaos>
+      <h2 id="next-title" class="display">Where I'm headed</h2>
+      <p class="lead">I want to build systems that decide: planners, optimizers and, eventually, robots that act on what they decide. The groundwork is already on the bench.</p>
+      <ul class="headed">
+        {heading.map((h) => (
+          <li>
+            <p class="mono k">{h.k}</p>
+            <h3>{h.t}</h3>
+            <p>{h.d}</p>
+            <p class="links">{h.links.map((l) => <a href={u(l.href)}>{l.label} →</a>)}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="block" aria-labelledby="how-title" data-chaos>
+      <h2 id="how-title" class="display">How I work</h2>
+      <ol class="principles">
+        {principles.map((p, i) => (
+          <li>
+            <span class="mono n">{String(i + 1).padStart(2, '0')}</span>
+            <div><h3>{p.t}</h3><p>{p.d} <a href={u(p.href)}>See it →</a></p></div>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="block grid2" aria-label="Now and toolbox" data-chaos>
+      <div class="now">
+        <p class="eyebrow">Now</p>
+        <dl>
+          <dt>Building</dt><dd>{now.building}</dd>
+          <dt>Curious about</dt><dd>{now.curious}</dd>
+          <dt>Playing</dt><dd>{now.playing}</dd>
+          <dt>Outside</dt><dd>{now.outside}</dd>
+          <dt>Open to</dt><dd>{now.openTo}</dd>
+        </dl>
+      </div>
+      <div>
+        <p class="eyebrow">Toolbox</p>
+        <div class="chips">{toolbox.map((t) => <span class="chip">{t}</span>)}</div>
+        <p class="hand note">Every one of these shows up in at least one experiment on the bench.</p>
+      </div>
+    </section>
+  </div>
+  <Contact heading="Let's build something worth measuring." />
+</Base>
+<style>
+  .about-page { padding-block: clamp(36px, 6vw, 80px) 0; }
+  .intro { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+  .polaroid { background: var(--paper-card); padding: 14px 14px 52px; transform: rotate(-2.5deg); box-shadow: 0 22px 34px -22px var(--shadow); position: relative; margin: 0; max-width: 380px; }
+  .polaroid::before { content: ""; position: absolute; top: -12px; left: 34%; width: 110px; height: 26px; background: var(--tape); transform: rotate(4deg); z-index: 1; }
+  .duotone { aspect-ratio: 4 / 5; overflow: hidden; background: var(--r-pink); }
+  .duotone :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 18%; filter: grayscale(1) contrast(1.25) brightness(1.08); mix-blend-mode: multiply; display: block; }
+  figcaption { position: absolute; bottom: 14px; left: 18px; font-family: var(--font-hand); font-size: 1.05rem; }
+  h1 { font-size: var(--step-3); max-width: 20ch; margin-bottom: 20px; }
+  .story { font-size: var(--step-1); line-height: 1.6; color: var(--ink-soft); }
+  .block { margin-top: clamp(48px, 7vw, 96px); padding-top: 28px; border-top: 1.5px solid var(--ink); }
+  .block h2 { font-size: var(--step-3); margin-bottom: 18px; }
+  .lead { font-size: var(--step-1); color: var(--ink-soft); max-width: 60ch; margin-bottom: 20px; line-height: 1.5; }
+  .headed { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .headed li { border: 1.5px solid var(--ink); border-radius: 12px; padding: 16px 18px; background: var(--paper-card); display: flex; flex-direction: column; gap: 8px; position: relative; }
+  .headed li::before { content: ""; position: absolute; left: -1.5px; right: -1.5px; top: -1.5px; height: 8px; border-radius: 12px 12px 0 0; background: var(--r-orange); border: 1.5px solid var(--ink); }
+  .headed li:nth-child(2)::before { background: var(--r-blue); }
+  .headed li:nth-child(3)::before { background: var(--r-green); }
+  .headed .k { color: var(--ink-soft); margin-top: 6px; }
+  .headed h3 { font-size: 1.2rem; }
+  .headed p { color: var(--ink-soft); }
+  .headed .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto; }
+  .headed .links a { color: var(--link); }
+  .principles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .principles li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; border: 1.5px solid var(--ink); border-radius: 12px; padding: 16px; background: var(--paper-card); }
+  .principles .n { color: var(--ink-soft); padding-top: 4px; }
+  .principles h3 { font-size: 1.15rem; margin-bottom: 6px; }
+  .principles p { color: var(--ink-soft); }
+  .principles a { color: var(--link); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+  .now dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 18px; margin: 0; }
+  .now dt { font-family: var(--font-mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-soft); padding-top: 3px; }
+  .now dd { margin: 0; }
+  .note { color: var(--ink-soft); margin-top: 14px; }
+  @media (max-width: 760px) { .intro { grid-template-columns: minmax(0, 1fr); } .polaroid { max-width: 300px; } }
+</style>

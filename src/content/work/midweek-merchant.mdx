@@ -1,0 +1,91 @@
+---
+code: "01"
+order: 1
+title: Midweek Merchant
+ink: green
+year: "2026"
+medium: Python · MILP · React
+stack: [Python 3.11, pandas, SciPy, HiGHS (MILP), FastAPI, Streamlit, React 19, TypeScript, Vite, Tailwind v4, Recharts, TanStack Query, GitHub Actions, Render]
+metric: "62.1"
+metricLabel: points a gameweek, picked blind. FPL's own pick scored 54.5
+proves: Forecasting and optimisation that beat the incumbent, blind
+dek: A Fantasy Premier League forecaster that picks its team before the deadline, without peeking, and beat FPL's own prediction in 28 of 37 gameweeks last season.
+description: Midweek Merchant forecasts expected points for every Premier League player, optimises transfers and chips with a mixed-integer program, and beat FPL's own prediction in 28 of 37 gameweeks, picked blind.
+preview: mm
+phrases: [predicts]
+metrics:
+  - { value: "62.1", label: "points per gameweek for the blind XI, vs 54.5 for FPL's pick (2025/26)" }
+  - { value: "28/37", label: "gameweeks where the model outscored FPL's own prediction" }
+  - { value: "1.91", label: "RMSE per player vs 2.12 for FPL, over 27,157 player-gameweeks" }
+  - { value: "6 h", label: "between automated refreshes of data, forecasts and plans" }
+playground: fpl-race
+playgroundTitle: The 2025/26 race, picked blind
+playgroundNote: Real backtest data · drag the slider
+links:
+  - { label: Open the live dashboard, href: "https://midweek-merchant.onrender.com" }
+  - { label: Read the source, href: "https://github.com/moses946/midweek-merchant" }
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Pipeline from '../../components/case/Pipeline.astro';
+import Figure from '../../components/case/Figure.astro';
+import MMLive from '../../components/playgrounds/MMLive.tsx';
+import overview from '../../assets/work/mm-overview.png';
+import modelHealth from '../../assets/work/mm-model-health.png';
+
+<Section n="01" title="Hypothesis">
+
+Most managers trust FPL's own expected-points number. If you combine what bookmakers already know with goals and xG data, and treat transfers as an optimisation problem instead of a hunch, a model should beat that number before the deadline, not just in hindsight.
+
+<Aside>FPL's "ep" is the figure most managers check first. Beating it blind is the bar.</Aside>
+</Section>
+
+<Section n="02" title="Method">
+
+Python does all the modelling. A GitHub Actions job runs the whole pipeline every six hours and publishes JSON to a `data` branch, which the React dashboard reads. The card on this site's home page reads the same files.
+
+<Pipeline note="all of this reruns on GitHub Actions every 6 hours" steps={[
+  { k: 'Data', t: 'FPL API, match history, odds' },
+  { k: 'Model', t: 'Team strength', s: 'Dixon–Coles + betting market' },
+  { k: 'Model', t: 'Minutes + player rates', s: 'calibrated on backtests' },
+  { k: 'Forecast', t: 'xPts', s: 'next 8 gameweeks', hot: true },
+  { k: 'Plan', t: 'MILP optimiser', s: 'HiGHS: squad, chips, transfers', hot: true },
+  { k: 'League', t: 'Monte Carlo', s: '5,000 correlated sims' },
+  { k: 'Ship', t: 'data branch → React' },
+]} />
+
+- **Team strength:** a time-decayed, ridge-regularised Poisson model (Dixon–Coles family) fitted to goals, xG and the goal expectancy implied by betting odds. Adding the market cut deviance from 1.082 to 1.062, against 1.061 for the bookmakers' own opening odds.
+- **Minutes:** recency-weighted start rates, mapped through calibration curves fitted on backtests. A 0.83 chance of 60+ minutes was coming true 90% of the time; after calibration the Brier score fell from 0.1062 to 0.1052.
+- **Optimiser:** a mixed-integer program picks the squad, XI, captain, transfers (at real selling prices) and chips under the 2026/27 rules. Placing all four chips at once ran into the solver's time limit with a worse plan, so it searches chip schedules one move at a time.
+- **Mini-leagues:** your plan and your rivals' likely lineups are scored on the same 5,000 correlated simulations, and options are ranked by your chance of finishing first, not by points.
+
+<Aside>Bookmakers price in team news and form faster than any stats feed. Using their odds as extra observations made the ratings sharper.</Aside>
+</Section>
+
+<Section n="03" title="Proof it isn't cheating">
+
+Every pick in the race above was made with data available before that gameweek's deadline. A test deletes everything from the target gameweek onwards, re-runs the hindcast and checks the picks are identical. If any future data leaked in, the test fails.
+
+The simulator is checked the same way: across last season its mean was 62.9 against 63.0 actual, and it predicted 5.9 scores of 80+ when 6 happened.
+
+<Figure src={modelHealth} alt="Midweek Merchant's model health page: backtest accuracy against baselines and a calibration plot" caption="The dashboard's Model health page tracks accuracy against FPL, form and hindsight." />
+
+<Aside>The easiest way to fool yourself in sports modelling is to train on next week's news.</Aside>
+</Section>
+
+<Section n="04" title="This season, live">
+
+The 2025/26 race is frozen. This panel reads the current season straight from the model's data branch, so it updates as gameweeks finish.
+
+<div class="wide"><MMLive client:visible /></div>
+
+<Figure src={overview} alt="Midweek Merchant dashboard overview: recommended move, title odds, captaincy shortlist and fixture runs" caption="The live dashboard: this week's move, captaincy and fixture runs." />
+</Section>
+
+<Section n="05" title="What I'd change">
+
+- Rivals are assumed to keep their squads. Modelling their transfers would make the mini-league odds more realistic.
+- Backtest team news is two to three days old, so the live model is probably a little better than the hindcast shows.
+- Penalty-taker changes only show up through historical xG shares.
+
+</Section>

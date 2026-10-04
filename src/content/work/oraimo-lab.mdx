@@ -1,0 +1,79 @@
+---
+code: "02"
+order: 2
+title: Oraimo Lab
+ink: teal
+year: "2026"
+medium: Flutter · Dart · BLE
+stack: [Flutter 3.47, Dart 3.13, flutter_blue_plus, Riverpod, SQLite, btsnoop / HCI parsing, GitHub Actions]
+metric: "156"
+metricLabel: tests in a Bluetooth lab that refuses to guess a single byte
+proves: Reverse engineering with an evidence-first discipline
+dek: A companion app for the Oraimo Watch 6R that starts as a Bluetooth laboratory. The watch's protocol is undocumented, so the app records evidence and refuses to invent a decoder until the evidence supports one.
+description: Oraimo Lab is a Flutter Bluetooth laboratory for reverse engineering an undocumented smartwatch protocol, with an HCI snoop-log parser, an evidence ledger and 156 tests.
+preview: hex
+phrases: [takes-apart]
+metrics:
+  - { value: "156", label: "tests, including byte-level btsnoop fixtures built to the spec" }
+  - { value: "0", label: "guessed bytes: no decoder exists until a hypothesis is supported" }
+  - { value: "10", label: "engineering rules, enforced in code and tests" }
+  - { value: "0", label: "network permissions: evidence never leaves the phone by itself" }
+playground: packet-bench
+playgroundTitle: The packet bench
+playgroundNote: Synthetic capture · illustrative only
+links: []
+---
+import Section from '../../components/case/Section.astro';
+import Aside from '../../components/case/Aside.astro';
+import Pipeline from '../../components/case/Pipeline.astro';
+
+<Section n="01" title="The problem">
+
+I wanted my own companion app for the Oraimo Watch 6R: custom watch faces first, then health data. Nobody publishes the watch's service UUIDs, characteristic UUIDs, packet framing, checksum scheme or watch-face format. The official Oraimo Health app knows them; I don't.
+
+The tempting move is to guess a format from a few packets and start building on it. A wrong guess looks exactly like knowledge, gets built on, and is expensive to unwind.
+
+<Aside>The repository's protocol status page currently reads "What is known: Nothing." That's deliberate.</Aside>
+</Section>
+
+<Section n="02" title="The rule: evidence before decoders">
+
+So the app is a lab first. It scans, connects, browses the attribute database, pokes individual characteristics and records every byte that moves, with a timestamp and a direction. There's no `decodePacket()` and no protocol constants anywhere.
+
+Interpretation lives in a separate **evidence ledger**. An *observation* is something seen in a capture. A *hypothesis* is what it might mean, plus what would disprove it. Both must cite the packet rows they rest on, and a hypothesis only reaches `SUPPORTED` after a capture designed to break it fails to. Disproven hypotheses are kept: knowing what the protocol is *not* narrows the search.
+
+<Aside>Try it in the playground above: cite packets and watch the ledger refuse claims the evidence doesn't back.</Aside>
+</Section>
+
+<Section n="03" title="How bytes move">
+
+<Pipeline steps={[
+  { k: 'UI', t: 'Scan, GATT explorer, packet monitor' },
+  { k: 'Transport', t: 'BleTransport interface', s: 'moves bytes, knows no UUIDs' },
+  { k: 'Decorator', t: 'InstrumentedBleTransport', s: 'every operation becomes a packet', hot: true },
+  { k: 'Store', t: 'SQLite evidence store', s: 'hex, µs timestamps, sessions' },
+  { k: 'Ledger', t: 'Observations ↔ hypotheses', s: 'must cite packets' },
+]} />
+
+- **Recording can't be skipped.** Logging lives in a decorator around the transport, not at call sites, so no future edit can quietly stop an operation being recorded. A failed operation is recorded as a packet, with the platform's verbatim error, before the exception is rethrown.
+- **The transport is an interface.** That's what lets the connection state machine (backoff, give-up path, not retrying into a switched-off radio) be tested against a fake radio.
+- **Sessions are experiments.** `watchface-A`, `change-time`: each records the device, the times, my notes, and whether the evidence is ours or the official app's.
+
+</Section>
+
+<Section n="04" title="The hardest part: reading the official app's traffic">
+
+The only way to see what Oraimo Health actually sends is Android's `btsnoop_hci.log`. The importer is pure Dart with no Flutter dependency, so it can be tested exhaustively against byte-level fixtures.
+
+A watch-face image is far bigger than one Bluetooth packet, so it arrives as many ACL fragments that have to be reassembled into L2CAP frames before the ATT layer makes sense. The parser tracks reassembly per connection handle, keeps the channel ID from the fragment that started the frame, and handles traffic from two devices interleaved. If a capture starts part-way through a frame, the orphaned fragments are discarded, because inventing the missing start would be a fabrication. A handle stays unresolved unless the capture itself identified it.
+
+<Aside>The parser tests are built from the Bluetooth spec, not from mocks: header validation, epoch conversion, reassembly across fragments, interleaved devices.</Aside>
+</Section>
+
+<Section n="05" title="Quality and where it's going">
+
+- 156 tests and a CI job that runs `flutter analyze --fatal-infos` on every push. The JSON export schema is pinned by a golden test, because captures recorded by older builds must stay readable.
+- The release APK asks only for Bluetooth permissions. With no INTERNET permission, captured evidence can't leave the phone except through an export you perform.
+- **Next:** capture the official app installing a watch face, record observations, and move the first hypotheses to `SUPPORTED`. Only then does a protocol layer get written, on top of the transport, without either changing.
+
+</Section>

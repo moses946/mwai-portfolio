@@ -1,0 +1,20 @@
+{
+  "label": "Illustrative values",
+  "note": "GI and carbohydrate figures are rounded estimates for demonstration. GlycoSafe estimates portions from the photo; here you set them with the sliders. Not medical advice.",
+  "defaultThreshold": 20,
+  "meals": [
+    { "id": "ugali", "name": "Ugali, sukuma wiki & beef stew", "foods": [
+      { "name": "Ugali", "gi": 72, "carbsPer100g": 30, "grams": 220, "max": 400 },
+      { "name": "Sukuma wiki", "gi": 15, "carbsPer100g": 5, "grams": 120, "max": 250 },
+      { "name": "Beef stew", "gi": 0, "carbsPer100g": 3, "grams": 150, "max": 300 } ] },
+    { "id": "chapati", "name": "Chapati & bean stew", "foods": [
+      { "name": "Chapati", "gi": 62, "carbsPer100g": 46, "grams": 90, "max": 270 },
+      { "name": "Bean stew", "gi": 30, "carbsPer100g": 20, "grams": 200, "max": 350 } ] },
+    { "id": "githeri", "name": "Githeri & avocado", "foods": [
+      { "name": "Githeri", "gi": 40, "carbsPer100g": 18, "grams": 250, "max": 450 },
+      { "name": "Avocado", "gi": 15, "carbsPer100g": 9, "grams": 80, "max": 200 } ] },
+    { "id": "pilau", "name": "Pilau & kachumbari", "foods": [
+      { "name": "Pilau", "gi": 70, "carbsPer100g": 28, "grams": 220, "max": 400 },
+      { "name": "Kachumbari", "gi": 15, "carbsPer100g": 4, "grams": 80, "max": 200 } ] }
+  ]
+}

@@ -1,0 +1,59 @@
+---
+import { publishedNotes, formatDate, readingMinutes } from '../../lib/notes';
+import { u } from '../../lib/site';
+
+const notes = (await publishedNotes()).slice(0, 3);
+// Planned essays fill the row until there are three real posts. Edit or delete freely.
+const upcoming = [
+  { tag: 'ML · post-mortem', title: 'How my World Cup model held up', dek: 'I predicted all 48 teams before a ball was kicked. Here is the scorecard, including the misses.' },
+  { tag: 'Reverse engineering', title: 'Evidence before decoders', dek: "Why the Bluetooth app I'm building refuses to guess a single byte of the watch's protocol." },
+  { tag: 'Linux · packaging', title: 'The bit that tar forgot', dek: 'Getting Claude Desktop and its Cowork VM to run on Arch, one missing permission at a time.' },
+].filter((p) => !notes.some((n) => n.data.title === p.title)).slice(0, Math.max(0, 3 - notes.length));
+---
+<section class="wrap notes" id="notes" aria-labelledby="notes-title" data-chaos>
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">Lab notes · essays and post-mortems</p>
+      <h2 id="notes-title">In the notebook</h2>
+    </div>
+    <div class="btn-row">
+      <a class="pill" href={u('/notes/')}>All notes</a>
+      <a class="pill" href={u('/rss.xml')}>RSS</a>
+    </div>
+  </div>
+  <div class="notes-grid">
+    {notes.map((n) => (
+      <a class="note" href={u(`/notes/${n.id}/`)}>
+        <p class="mono">{formatDate(n.data.pubDate)} · {readingMinutes(n.body)} min</p>
+        <h3>{n.data.title}</h3>
+        <p class="dek">{n.data.description}</p>
+        {n.data.tags.length > 0 && <p class="mono tags">{n.data.tags.join(' · ')}</p>}
+      </a>
+    ))}
+    {upcoming.map((p) => (
+      <article class="note upcoming">
+        <span class="stamp">COMING UP</span>
+        <p class="mono">{p.tag}</p>
+        <h3>{p.title}</h3>
+        <p class="dek">{p.dek}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .notes { padding-block: clamp(48px, 7vw, 88px); }
+  .notes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 18px; }
+  .note {
+    position: relative; padding: 22px 20px 20px 32px; background: var(--paper-card); border: 1.5px solid var(--ink); border-radius: 4px; text-decoration: none;
+    background-image: linear-gradient(transparent 31px, var(--grid-strong) 32px); background-size: 100% 32px; background-position: 0 14px;
+    display: flex; flex-direction: column; gap: 10px; min-height: 230px; transition: transform .2s;
+  }
+  a.note:hover { transform: translateY(-3px) rotate(-.4deg); }
+  .note::before { content: ""; position: absolute; top: 0; bottom: 0; left: 16px; width: 1.5px; background: var(--r-red); opacity: .7; }
+  .note h3 { font-size: var(--step-1); line-height: 1.15; font-weight: 750; font-variation-settings: "opsz" 48; }
+  .note .dek, .note .tags { color: var(--ink-soft); }
+  .note .mono { color: var(--ink-soft); }
+  .upcoming { background-color: color-mix(in srgb, var(--paper-card) 60%, transparent); }
+  .stamp { position: absolute; top: 14px; right: 14px; padding: 2px 8px; border: 1.5px solid #C2187A; color: #C2187A; transform: rotate(6deg); border-radius: 4px; font-family: var(--font-mono); font-size: .7rem; letter-spacing: .1em; background: var(--paper-card); }
+</style>

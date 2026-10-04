@@ -1,0 +1,30 @@
+---
+import { SITE, u } from '../lib/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <p class="eyebrow">Lab notes by RSS</p>
+        <div class="btn-row">
+          <a class="pill" href={u('/rss.xml')}>RSS feed</a>
+          <button class="pill" type="button" data-copy={new URL(u('/rss.xml'), Astro.site).href} data-copy-label="Feed URL">Copy feed URL</button>
+        </div>
+      </div>
+      <div>
+        <p class="eyebrow">Elsewhere</p>
+        <div class="btn-row">
+          {SITE.socials.map((s) => <a class="pill" href={s.href} target="_blank" rel="noreferrer">{s.label}</a>)}
+          <button class="pill" type="button" data-copy={SITE.email} data-copy-label="Email">Copy email</button>
+        </div>
+      </div>
+    </div>
+    <p class="mono colophon">© {year} Moses Mwai · Nairobi · Set in Bricolage Grotesque, Shantell Sans and JetBrains Mono · Press <kbd>⌘K</kbd> to jump anywhere</p>
+  </div>
+</footer>
+<style>
+  .site-footer { border-top: 1.5px solid var(--ink); margin-top: clamp(48px, 7vw, 96px); padding-block: 28px 40px; background: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+  .colophon { color: var(--ink-soft); margin-top: 28px; }
+</style>
