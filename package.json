@@ -11,7 +11,9 @@
     "build:offline": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:blog": "node tests/blog-check.mjs",
+    "test:e2e": "node tests/e2e/verify.mjs screenshots"
   },
   "engines": {
     "node": ">=22.12"

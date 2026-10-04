@@ -34,7 +34,16 @@ export function initPalette(): void {
 
   const render = () => {
     const q = input.value.toLowerCase().trim();
-    shown = all.filter((c) => `${c.label} ${c.hint}`.toLowerCase().includes(q));
+    // Exact word matches first ("chaos" → Unleash chaos), then word prefixes, then substrings.
+    const rank = (c: Command) => {
+      const words = `${c.label} ${c.hint}`.toLowerCase().split(/[^a-z0-9]+/);
+      return words.includes(q) ? 3 : words.some((w) => w.startsWith(q)) ? 2 : 1;
+    };
+    shown = all
+      .map((c, i) => ({ c, i }))
+      .filter(({ c }) => `${c.label} ${c.hint}`.toLowerCase().includes(q))
+      .sort((a, b) => (q ? rank(b.c) - rank(a.c) : 0) || a.i - b.i)
+      .map(({ c }) => c);
     sel = Math.min(sel, Math.max(0, shown.length - 1));
     list.innerHTML = '';
     if (!shown.length) {

@@ -16,7 +16,7 @@ phrases: [takes-apart]
 metrics:
   - { value: "1 bit", label: "SUID on chrome-sandbox, stripped by tar during extraction, restored in package()" }
   - { value: "0", label: "binary changes: the official .deb is checksummed and repackaged as is" }
-  - { value: "4", label: "test suites in CI, none of which need root or KVM" }
+  - { value: "4", label: "test suites, none of which need root or KVM; CI builds the package in an Arch container" }
   - { value: "2", label: "architectures in the PKGBUILD: x86_64 and aarch64" }
 playground: terminal-replay
 playgroundTitle: The build, replayed
@@ -64,13 +64,13 @@ Before writing a line of PKGBUILD I took the official package apart and wrote do
 
 <Section n="04" title="Testing without root">
 
-CI runs in Arch Linux containers on GitHub Actions, which have no KVM and no root for the build user. So the tests check what can be checked honestly: PKGBUILD validation; an install simulation that runs every command from `prepare()`, `package()` and the install hooks against the real `.deb` and verifies the result; a runtime smoke test of the installed layout, including the SUID bit and the firmware symlinks; and a Cowork prerequisites checker that users can also run on their own machines.
+CI builds the package inside Arch Linux containers on GitHub Actions, verifies its contents and checks Anthropic's package index for a newer version. Those containers have no KVM, so the four test suites check what can be checked honestly without it: PKGBUILD validation; an install simulation that runs every command from `prepare()`, `package()` and the install hooks against the real `.deb` and verifies the result; a runtime smoke test of the installed layout, including the SUID bit and the firmware symlinks; and a Cowork prerequisites checker that users can also run on their own machines.
 
 </Section>
 
 <Section n="05" title="What I'd change">
 
 - Publish to the AUR so updates arrive through an AUR helper.
-- Run the existing `check-upstream-version.sh` on a schedule and open a pull request with the new version and checksums when Anthropic ships a new `.deb`.
+- Turn the upstream-version check CI already runs into a scheduled job that opens a pull request with the new version and checksums.
 
 </Section>

@@ -14,7 +14,11 @@ npm run build      # refreshes Midweek Merchant data, then builds to dist/
 npm run build:offline   # same build without the network refresh
 npm test           # FitWeek recommender tests (vendored code)
 npm run check      # astro check (types + templates)
+npm run test:blog  # builds with fixture posts: drafts and future posts hidden, feed valid, no broken links
+npm run test:e2e   # Playwright: every page at phone/desktop widths, every playground, live-data fallbacks
 ```
+
+`test:e2e` expects `npm run preview` running and Playwright installed (`npm i -D playwright`).
 
 Node 22.12 or newer is required.
 
