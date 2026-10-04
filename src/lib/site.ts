@@ -2,7 +2,7 @@ export const SITE = {
   name: 'Moses Mwai',
   title: "Moses Mwai's Lab",
   description:
-    'Software engineer in Nairobi. Eight experiments you can poke at, from forecasting and reverse engineering to applied AI, plus lab notes.',
+    'Software engineer in Nairobi, drawn to planning, optimization and robotics. Eight experiments you can poke at, from forecasting and reverse engineering to applied AI, plus lab notes.',
   email: 'mosesmwaiw@gmail.com',
   location: 'Nairobi, Kenya',
   socials: [
