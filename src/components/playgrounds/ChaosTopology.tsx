@@ -114,7 +114,7 @@ export default function ChaosTopology({ model }: Props) {
       </div>
       <div className="pg-split">
         <div className="pg-pad">
-          <svg viewBox="0 0 640 350" role="group" aria-label="Service topology. Each service is a button that injects the selected fault.">
+          <svg viewBox="0 0 640 372" role="group" aria-label="Service topology. Each service is a button that injects the selected fault.">
             <rect x="12" y="14" width="392" height="326" rx="12" fill="none" stroke="var(--grid-strong)" strokeDasharray="6 5" />
             <rect x="420" y="14" width="208" height="326" rx="12" fill="none" stroke="var(--grid-strong)" strokeDasharray="6 5" />
             <text x="24" y="34" fontSize="11" fill="var(--ink-soft)">ZONE A</text>
@@ -129,7 +129,7 @@ export default function ChaosTopology({ model }: Props) {
               const [x, y] = POS[s.id], st = status[s.id];
               return (
                 <g key={s.id} className={`node ${st}`} transform={`translate(${x} ${y})`} role="button" tabIndex={running ? -1 : 0}
-                  aria-label={`${s.name}, ${st}. Inject ${faults.find((f) => f.type === faultType)!.label.toLowerCase()}.`}
+                  aria-label={`${s.short} ${s.name}, ${st}. Inject ${faults.find((f) => f.type === faultType)!.label.toLowerCase()}.`}
                   onClick={() => inject(s.id)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inject(s.id); } }}>
                   <g className="inner">
                   <circle r="30" fill={COLORS[st]} stroke="var(--ink)" strokeWidth="2" />
@@ -143,7 +143,7 @@ export default function ChaosTopology({ model }: Props) {
           </svg>
         </div>
         <div className="pg-pad side">
-          <div className="health">
+          <div className="c-health">
             <span className="pg-mono">SYSTEM HEALTH</span>
             <b style={{ color: metrics.health < 40 ? 'var(--bad)' : 'var(--ink)' }}>{metrics.health}</b>
             <span className="track"><i style={{ width: `${metrics.health}%`, background: hTone }} /></span>
@@ -172,10 +172,10 @@ export default function ChaosTopology({ model }: Props) {
         .chaos .node.failed .inner { animation: shake .35s ease 2; }
         @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
         .chaos .side { display: flex; flex-direction: column; gap: 12px; }
-        .chaos .health { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
-        .chaos .health b { font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; }
-        .chaos .health .track { grid-column: 1 / -1; height: 10px; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
-        .chaos .health .track i { display: block; height: 100%; transition: width .6s, background .6s; }
+        .chaos .c-health { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; }
+        .chaos .c-health b { font-size: 2rem; line-height: 1; font-variant-numeric: tabular-nums; }
+        .chaos .c-health .track { grid-column: 1 / -1; height: 10px; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; }
+        .chaos .c-health .track i { display: block; height: 100%; transition: width .6s, background .6s; }
         .chaos .log { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: .84rem; }
         .chaos .log li { border-left: 3px solid var(--grid-strong); padding-left: 8px; }
         .chaos .log li.injection { border-color: var(--bad); }

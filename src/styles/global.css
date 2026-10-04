@@ -9,7 +9,7 @@
   --grid-strong: #B7D0CB;
   --ink: #16181B;
   --ink-soft: #4F5760;
-  --ink-faint: #7A828A;
+  --ink-faint: #656C74;
   --ink-text: #16181B;      /* text on light inks */
   --paper-text: #F6F8F4;    /* text on dark inks */
   --tape: rgba(255, 252, 235, .62);
@@ -27,9 +27,9 @@
   --bad: #E0384B;
   --link: #2E4C93;
 
-  --font-display: "Bricolage Grotesque Variable", "Avenir Next", "Segoe UI", system-ui, sans-serif;
-  --font-hand: "Shantell Sans Variable", "Comic Neue", "Segoe Print", cursive;
-  --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --font-display: var(--font-bricolage), "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-hand: var(--font-shantell), "Comic Neue", "Segoe Print", cursive;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
   --step--1: clamp(.8rem, .78rem + .1vw, .86rem);
   --step-0: clamp(1rem, .96rem + .2vw, 1.1rem);

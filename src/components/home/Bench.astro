@@ -151,7 +151,7 @@ const LAYOUT: [number, number, number][] = [
       for (let x = 0, i = 0; x < w; x += 12, i++) {
         const big = i % 10 === 0, mid = i % 5 === 0;
         s += `<line x1="${x + 0.5}" y1="0" x2="${x + 0.5}" y2="${big ? 14 : mid ? 9 : 5}" stroke="currentColor" stroke-width="1"/>`;
-        if (big && i) s += `<text x="${x + 3}" y="22" font-family="JetBrains Mono Variable, monospace" font-size="9" fill="currentColor">${i / 10}</text>`;
+        if (big && i) s += `<text x="${x + 3}" y="22" style="font-family:var(--font-mono)" font-size="9" fill="currentColor">${i / 10}</text>`;
       }
       ruler.innerHTML = s;
     }

@@ -54,7 +54,7 @@ export default function BracketFill({ data }: Props) {
                   return (
                     <button key={t.code} type="button" className={`team ${tone(t)}${t.code === selCode ? ' sel' : ''}`}
                       style={{ animationDelay: `${(rankOf.get(t.code) ?? 0) * 28}ms` }}
-                      onClick={() => setSelCode(t.code)} aria-label={`${t.name}: predicted ${data.stages[t.pred.stage]}, actual ${data.stages[t.actual.stage]}`}>
+                      onClick={() => setSelCode(t.code)} aria-label={`${t.code} ${t.name}: predicted ${data.stages[t.pred.stage]}, actual ${data.stages[t.actual.stage]}`}>
                       {t.code}{mode === 'compare' && e !== 0 && <sup aria-hidden="true">{e > 0 ? '↑' : '↓'}</sup>}
                     </button>
                   );

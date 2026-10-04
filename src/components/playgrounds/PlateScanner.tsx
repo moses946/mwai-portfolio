@@ -90,7 +90,7 @@ export default function PlateScanner({ data }: Props) {
             <svg viewBox="0 0 200 116" role="img" aria-label={`Meal glycemic load ${total.toFixed(0)}, ${b}`}>
               <path d="M20 100a80 80 0 0 1 160 0" fill="none" stroke="var(--grid-strong)" strokeWidth="16" />
               <path d="M20 100a80 80 0 0 1 160 0" fill="none" stroke={over ? 'var(--bad)' : 'var(--ok)'} strokeWidth="16" pathLength={180} strokeDasharray={`${phase === 'done' ? angle : 0} 180`} style={{ transition: 'stroke-dasharray .6s ease' }} />
-              <line x1="100" y1="100" x2={100 + Math.cos(Math.PI - (Math.min(1, threshold / 60) * Math.PI)) * 88} y2={100 - Math.sin(Math.min(1, threshold / 60) * Math.PI) * 88} stroke="var(--ink)" strokeWidth="2" strokeDasharray="3 3" />
+              {(() => { const t = Math.min(1, threshold / 60) * Math.PI, c = -Math.cos(t), s = Math.sin(t); return <line x1={100 + c * 68} y1={100 - s * 68} x2={100 + c * 94} y2={100 - s * 94} stroke="var(--ink)" strokeWidth="3" />; })()}
               <text x="100" y="86" textAnchor="middle" fontSize="28" fontWeight="700" fill="var(--ink)">{phase === 'done' ? total.toFixed(0) : '…'}</text>
               <text x="100" y="104" textAnchor="middle" fontSize="10" fill="var(--ink-soft)">MEAL GL · {b.toUpperCase()}</text>
             </svg>

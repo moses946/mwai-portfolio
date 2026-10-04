@@ -90,12 +90,12 @@ for (const path of process.env.SKIP_ROUTES ? [] : ROUTES) {
 // 3. Interactions.
 {
   const { ctx, page, errors } = await open('/work/chaoslab/');
-  await page.locator('[aria-label^="Recommendation Engine"]').click();
+  await page.locator('[aria-label^="REC Recommendation Engine"]').click();
   await page.waitForTimeout(900);
-  const hDown = Number(await page.textContent('.chaos .health b'));
+  const hDown = Number(await page.textContent('.chaos .c-health b'));
   check('chaos: killing a node drops health', hDown < 100, String(hDown));
-  await page.waitForFunction(() => document.querySelector('.chaos .health b')?.textContent === '100' && document.querySelector('.chaos .log')?.textContent.includes('All services recovered'), null, { timeout: 15000 }).catch(() => {});
-  const hUp = await page.textContent('.chaos .health b');
+  await page.waitForFunction(() => document.querySelector('.chaos .c-health b')?.textContent === '100' && document.querySelector('.chaos .log')?.textContent.includes('All services recovered'), null, { timeout: 15000 }).catch(() => {});
+  const hUp = await page.textContent('.chaos .c-health b');
   check('chaos: system recovers to 100', hUp === '100', hUp);
   check('chaos: no errors', errors.length === 0, errors.join(' | '));
   await ctx.close();

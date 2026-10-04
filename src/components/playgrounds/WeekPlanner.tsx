@@ -13,18 +13,26 @@ const WARDROBE: Seed[] = [
   ['t4', 'Black knit', 'tops', 'black', ['wool'], 20],
   ['t5', 'Olive overshirt', 'tops', 'olive', ['cotton'], 6],
   ['t6', 'Red tee', 'tops', 'red', ['cotton'], 30, 'laundry'],
+  ['t7', 'Beige linen shirt', 'tops', 'beige', ['linen'], 15],
+  ['t8', 'Charcoal tee', 'tops', 'charcoal', ['cotton'], 9],
   ['b1', 'Beige chinos', 'bottoms', 'beige', ['cotton'], 4],
   ['b2', 'Dark denim', 'bottoms', 'navy', [], 9],
   ['b3', 'Black trousers', 'bottoms', 'black', [], 15],
   ['b4', 'Grey joggers', 'bottoms', 'grey', ['fleece'], null],
+  ['b5', 'Olive shorts', 'bottoms', 'olive', ['cotton'], 21],
+  ['b6', 'Navy chinos', 'bottoms', 'navy', ['cotton'], 11],
   ['d1', 'Kitenge dress', 'dresses', 'orange', ['cotton'], 25],
   ['o1', 'Rain jacket', 'outerwear', 'navy', ['waterproof'], 40],
   ['o2', 'Wool coat', 'outerwear', 'charcoal', ['wool'], 60],
   ['s1', 'White sneakers', 'shoes', 'white', [], 1],
   ['s2', 'Brown boots', 'shoes', 'brown', ['waterproof'], 10],
   ['s3', 'Black loafers', 'shoes', 'black', [], 18],
+  ['s4', 'Canvas sneakers', 'shoes', 'navy', [], 7],
+  ['s5', 'Tan sandals', 'shoes', 'tan', [], 14],
+  ['s6', 'Grey trainers', 'shoes', 'grey', [], 22],
+  ['s7', 'Brown loafers', 'shoes', 'brown', [], 30],
 ];
-const HEX: Record<string, string> = { white: '#F7F7F2', navy: '#24345E', grey: '#9AA0A6', black: '#1F2125', olive: '#6B7340', red: '#D8423C', beige: '#D8C3A0', orange: '#F07A2C', charcoal: '#3C4046', brown: '#7A4A2A' };
+const HEX: Record<string, string> = { white: '#F7F7F2', navy: '#24345E', grey: '#9AA0A6', black: '#1F2125', olive: '#6B7340', red: '#D8423C', beige: '#D8C3A0', orange: '#F07A2C', charcoal: '#3C4046', brown: '#7A4A2A', tan: '#C8A57A' };
 
 function buildWardrobe(today: Date): Garment[] {
   return WARDROBE.map(([id, name, category, color, tags, worn, status]) => ({

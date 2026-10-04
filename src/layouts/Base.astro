@@ -1,9 +1,7 @@
 ---
-import '@fontsource-variable/bricolage-grotesque/standard.css';
-import '@fontsource-variable/shantell-sans';
-import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import { Font } from 'astro:assets';
 import Masthead from '../components/Masthead.astro';
 import Footer from '../components/Footer.astro';
 import CommandPalette from '../components/CommandPalette.astro';
@@ -48,6 +46,9 @@ const feed = new URL(u('/rss.xml'), Astro.site);
     {tags.map((t) => <meta property="article:tag" content={t} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content="@mwaii__" />
+    <Font cssVariable="--font-bricolage" preload />
+    <Font cssVariable="--font-jetbrains" preload />
+    <Font cssVariable="--font-shantell" />
     <ClientRouter />
   </head>
   <body>
